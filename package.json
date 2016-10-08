@@ -19,6 +19,7 @@
     "css-loader": "^0.25.0",
     "eslint": "^3.7.1",
     "eslint-loader": "^1.5.0",
+    "hammerjs": "^2.0.8",
     "html-webpack-plugin": "^2.22.0",
     "node-sass": "^3.10.1",
     "path": "^0.12.7",

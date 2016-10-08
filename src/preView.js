@@ -8,7 +8,7 @@ import 'src/animation';
 import util from 'src/util';
 
 export default class PreViewImg {
-    constructor(canvas, src, option) {
+    constructor(canvas, src, options) {
         if (canvas.getContext) {
             let size = util.getSize(canvas);// 获取初始高度数据
 
@@ -37,12 +37,14 @@ export default class PreViewImg {
             this.offCanvas = null;
 
             // 可选参数
-            this.option = option || {
-                maxScale: 4,
-                minScale: 1,
-                doubleTapScale: 2
+            let defaultOptions = {
+                maxScale: 4,// 最大缩放边界
+                minScale: 1,// 最小缩放边界
+                doubleTapScale: 2 // 双击缩放大小
                 //rotate: false,
             };
+
+            this.options = options || defaultOptions;
 
             this.sw = 0;// 绘制宽高
             this.sh = 0;// 绘制宽高
@@ -131,6 +133,8 @@ export default class PreViewImg {
         ctx.fillStyle = '#ffffff';
         ctx.strokeStyle = '#ffffff';
 
+        let base = self.ratio;
+
         /**
          * @description 加载动画
          */
@@ -138,14 +142,14 @@ export default class PreViewImg {
             ctx.clearRect(0, 0, w, h);
             ctx.save();
             ctx.translate(w / 2, h / 2);
-            ctx.rotate(5 * count * Math.PI / 180);
+            ctx.rotate((base/2) * 5 * count * Math.PI / 180);
 
             for (let i = 0; i < 9; i++) {
                 ctx.save();
 
                 ctx.rotate(36 * i * Math.PI / 180);
                 ctx.beginPath();
-                ctx.arc(30, 30, 1 + i, 0, Math.PI * 2, false);
+                ctx.arc(30 * base, 30 * base, (1 + i) * base, 0, Math.PI * 2, false);
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
@@ -215,8 +219,8 @@ export default class PreViewImg {
             let toScale = 0;
 
             if (this.scale == 1) {
-                this._getBiggerOriginPoint(tx, ty, this.option.doubleTapScale);
-                toScale = this.option.doubleTapScale;
+                this._getBiggerOriginPoint(tx, ty, this.options.doubleTapScale);
+                toScale = this.options.doubleTapScale;
             } else {
                 this._getScaleSmallerPoint();
                 toScale = 1;

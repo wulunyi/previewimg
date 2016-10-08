@@ -566,6 +566,8 @@
 	            ctx.fillStyle = '#ffffff';
 	            ctx.strokeStyle = '#ffffff';
 
+	            var base = self.ratio;
+
 	            /**
 	             * @description 加载动画
 	             */
@@ -573,14 +575,14 @@
 	                ctx.clearRect(0, 0, w, h);
 	                ctx.save();
 	                ctx.translate(w / 2, h / 2);
-	                ctx.rotate(5 * count * Math.PI / 180);
+	                ctx.rotate(base / 2 * 5 * count * Math.PI / 180);
 
 	                for (var i = 0; i < 9; i++) {
 	                    ctx.save();
 
 	                    ctx.rotate(36 * i * Math.PI / 180);
 	                    ctx.beginPath();
-	                    ctx.arc(30, 30, 1 + i, 0, Math.PI * 2, false);
+	                    ctx.arc(30 * base, 30 * base, (1 + i) * base, 0, Math.PI * 2, false);
 	                    ctx.closePath();
 	                    ctx.fill();
 	                    ctx.stroke();
