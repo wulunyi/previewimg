@@ -1,0 +1,33 @@
+{
+    "parser": "babel-eslint",
+    "rules": {
+        "comma-dangle": 1,
+        "no-dupe-args": 1,
+        "no-dupe-keys": 1,
+        "no-duplicate-case": 1,
+        "no-empty": 1,
+        "no-extra-boolean-cast": 1,
+        "no-extra-parens": 1,
+        "no-extra-semi": 1,
+        "no-with": 1,
+        "no-self-assign": 1,
+        "camelcase": [
+            "error",
+            {
+                "properties": "always"
+            }
+        ],
+        "require-jsdoc": [
+            1,
+            {
+                "require": {
+                    "FunctionDeclaration": true,
+                    "MethodDefinition": false,
+                    "ClassDeclaration": false
+                }
+            }
+        ],
+        "no-mixed-spaces-and-tabs": 1,
+        "indent": [2, 4]
+    }
+}
