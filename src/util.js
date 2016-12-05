@@ -5,28 +5,53 @@
 'use strict';
 
 export default {
-    getOffCanvas(img, w, h){
-        let canvas = document.createElement('canvas');
-        let ctx = canvas.getContext('2d');
+	getOffCanvas:(()=>{
+		var cache = {};
+		var _shift = Array.prototype.shift;
 
-        canvas.width = w;
-        canvas.height = h;
+		return function (){
+			let img = _shift.call(arguments);
+			let w = _shift.call(arguments);
+			let h = _shift.call(arguments);
 
-        ctx.drawImage(img, 0, 0, w, h);
+			if(!cache[img.src]){
+				let canvas = document.createElement('canvas');
+				let ctx = canvas.getContext('2d');
 
-        return canvas;
-    },
+				canvas.width = w;
+				canvas.height = h;
 
-    getSize(dom) {
-        let boundData = dom.getBoundingClientRect();
+				ctx.drawImage(img, 0, 0, w, h);
 
-        return {
-            height: boundData.height,
-            width: boundData.width
-        }
-    },
+				cache[img.src] = canvas;
+			}
 
-    toFixed(num) {
-        return Math.floor(num * 100) / 100;
-    }
+			return cache[img.src];
+		}
+	})(),
+
+	getSize(dom) {
+		let boundData = dom.getBoundingClientRect();
+
+		return {
+			height: boundData.height,
+			width: boundData.width
+		}
+	},
+
+	toFixed(num) {
+		return Math.floor(num * 100) / 100;
+	},
+
+	createDom() {
+		let tagName = [].shift.call(arguments) || 'div';
+		let options = [].shift.call(arguments) || {};
+		let resultDom = document.createElement(tagName);
+
+		for (let propoty in options) {
+			resultDom[propoty] = options[propoty];
+		}
+
+		return resultDom;
+	}
 }

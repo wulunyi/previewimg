@@ -5,6 +5,34 @@
 'use strict';
 
 import 'css/index.scss';
-import preView from 'src/preView';
+import PreViewWrap from 'src/PreViewWrap';
+import Hammer      from 'hammerjs';
+import Immutable   from 'immutable';
 
-window.pre = new preView(document.getElementsByTagName('canvas')[0],'http://segmentfault.com/img/bVcQV0');
+window.Immutable = Immutable;
+
+function preViewImg(src){
+    let h = window.innerHeight;
+    let w = window.innerWidth;
+
+    let size = {
+        width: w,
+        height: h
+    };
+
+    let rootDom = document.createElement('div');
+
+    rootDom.style.width    = '100vw';
+    rootDom.style.height   = '100vh';
+    rootDom.style.position = 'absolute';
+    rootDom.style.top      = 0;
+    rootDom.style.left     = 0;
+    rootDom.style.zIndex   = 10000;
+
+    let preViewWrap = new PreViewWrap(size, src);
+
+    rootDom.appendChild(preViewWrap.canvas);
+    document.body.appendChild(rootDom);
+}
+
+preViewImg('https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg');
