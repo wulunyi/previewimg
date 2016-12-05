@@ -17,8 +17,8 @@ export  default (function () {
 	let _deltaX = null;
 	let _currentIndex = 0;
 	let _MAX_INDEX = 0;
-	let _preList = [];
-	let _pageDom = {};
+	let _preList = [];// 预览
+	let _PAGE_DOM = {};// 翻页dom元素
 
 	const _SIZE = {
 		width: window.innerWidth,
@@ -42,7 +42,7 @@ export  default (function () {
 
 		_PRE_PANEL.appendChild(pageWrapDom);
 
-		_pageDom = pageItemDom
+		_PAGE_DOM = pageItemDom;
 
 		_PRE_PANEL.style.display = 'none';
 
@@ -155,7 +155,7 @@ export  default (function () {
 	}
 
 	function _setPage() {
-		_pageDom.innerHTML = (_MAX_INDEX + 1) + '/' + (_currentIndex + 1);
+		_PAGE_DOM.innerHTML = (_MAX_INDEX + 1) + '/' + (_currentIndex + 1);
 	}
 
 	function _createPreView() {

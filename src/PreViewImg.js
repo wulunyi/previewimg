@@ -73,14 +73,14 @@ export default class PreViewImg {
 		let cb = [].shift.call(arguments);
 
 		if (cache[src]) {
-			cb(cache[src]);
+			cb && cb(cache[src]);
 		} else {
 			let imgObj = document.createElement('img');
 
 			imgObj.addEventListener('load', ()=> {
 				cache[src] = imgObj;
 
-				cb(imgObj);
+				cb && cb(imgObj);
 			});
 
 			imgObj.addEventListener('error', ()=> {
@@ -101,22 +101,6 @@ export default class PreViewImg {
 				._getInitData(imgObj)
 				._draw(imgObj);
 		});
-
-		// let imgObj = document.createElement('img');
-		//
-		// imgObj.addEventListener('load', ()=> {
-		//     console.log('-> 图片加载成功');
-		//
-		//     self._loading('end')
-		//         ._getInitData(imgObj)
-		//         ._draw(imgObj);
-		// });
-		//
-		// imgObj.addEventListener('error', ()=> {
-		//     console.log('-> 图片加载失败,请检查图片是否存在');
-		// });
-		//
-		// imgObj.src = src;
 	}
 
 	_getInitData(imgObj) {
