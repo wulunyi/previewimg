@@ -5,6 +5,13 @@
 'use strict';
 
 export default {
+	/**
+	 * @description 获取离屏canvas
+	 * @param img {object} 图片对象
+	 * @param w {number} 离屏宽度
+	 * @param h {number} 离屏高度
+	 * @return {object} 返回离屏canvas
+	 */
 	getOffCanvas:(()=>{
 		var cache = {};
 		var _shift = Array.prototype.shift;
@@ -27,6 +34,38 @@ export default {
 			}
 
 			return cache[img.src];
+		}
+	})(),
+
+	/**
+	 * @description 下载图片
+	 * @param src [string] 图片地址
+	 * @param cb [function] 回调函数
+	 */
+	getImg:(function () {
+		var _imgCache = {};
+		var _shift = Array.prototype.shift;
+
+		return function () {
+			var src = _shift.call(arguments),
+				cb = _shift.call(arguments);
+
+			if(!_imgCache[src]){
+				var imgObj = document.createElement('img');
+
+				imgObj.addEventListener('load', ()=> {
+					_imgCache[src] = imgObj;
+					cb && cb(imgObj);
+				});
+
+				imgObj.addEventListener('error', ()=> {
+					console.log('-> 图片加载失败,请检查图片是否存在');
+				});
+
+				imgObj.src = src;
+			}
+
+			cb(_imgCache[src]);
 		}
 	})(),
 
