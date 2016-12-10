@@ -2,7 +2,7 @@
   "name": "previewimg",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.bundle.js",
   "directories": {
     "test": "test"
   },
