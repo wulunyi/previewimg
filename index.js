@@ -1,4 +1,5 @@
 'use strict';
 
-import preview from './src/pre-view';
-window.preview = preview;
+var preview = require('./src/pre-view');
+
+exports.preview = preview;
