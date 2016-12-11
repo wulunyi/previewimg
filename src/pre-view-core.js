@@ -4,7 +4,7 @@
  */
 'use strict';
 
-var util = require('src/util');
+var util = require('./util');
 
 function PreViewImg(canvas, size, src, options) {
 	if (canvas.getContext) {

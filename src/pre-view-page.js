@@ -4,9 +4,9 @@
  */
 'use strict';
 
-var PreView = require('src/pre-view-core');
+var PreView = require('./pre-view-core');
 var Hammer = require('hammerjs');
-var util = require('src/util');
+var util = require('./util');
 
 function PreViewPage(size, src) {
 	this.canvas = util.createDom('canvas');

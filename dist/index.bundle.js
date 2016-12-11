@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "b1a7212e062edb18ed0e"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "cd99b8ad48d7e0176dc1"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -644,6 +644,7 @@
 	 * @author wulunyi
 	 */
 	'use strict';
+
 	__webpack_require__(3);
 	__webpack_require__(4);
 
@@ -651,17 +652,17 @@
 	var PreViewPage = __webpack_require__(6);
 	var Hammer = __webpack_require__(8);
 
-	module.exports = (function () {
+	module.exports = function () {
 		var _PRE_PANEL = null;
 		var _tempChild = null;
 		var _timer = null;
 		var _deltaX = null;
 		var _currentIndex = 0;
 		var _MAX_INDEX = 0;
-		var _preList = [];// 预览
-		var _PAGE_DOM = {};// 翻页dom元素
+		var _preList = []; // 预览
+		var _PAGE_DOM = {}; // 翻页dom元素
 
-		const _SIZE = {
+		var _SIZE = {
 			width: window.innerWidth,
 			height: window.innerHeight
 		};
@@ -696,7 +697,7 @@
 				clearTimeout(_timer);
 
 				// 预测用户是否要做双击操作
-				_timer = setTimeout(()=> {
+				_timer = setTimeout(function () {
 					_hide();
 				}, 200);
 
@@ -734,8 +735,8 @@
 
 				_deltaX = null;
 
-				_eventHandler.dom.style.transition = "all 200ms ease";// 开启动画
-				_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease";// 开启动画
+				_eventHandler.dom.style.transition = "all 200ms ease"; // 开启动画
+				_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease"; // 开启动画
 
 				var tempIndex = _currentIndex;
 
@@ -782,7 +783,7 @@
 			dom.style['-moz-transition'] = "translate(" + offsetDistance + 'px)';
 			dom.style['-ms-transition'] = "translate(" + offsetDistance + 'px)';
 
-			srcArr.forEach((src)=> {
+			srcArr.forEach(function (src) {
 				dom.appendChild(_createPreView(src));
 			});
 
@@ -796,7 +797,7 @@
 		}
 
 		function _setPage() {
-			_PAGE_DOM.innerHTML = (_MAX_INDEX + 1) + '/' + (_currentIndex + 1);
+			_PAGE_DOM.innerHTML = _MAX_INDEX + 1 + '/' + (_currentIndex + 1);
 		}
 
 		function _createPreView() {
@@ -855,8 +856,8 @@
 			show: _show,
 			hide: _hide,
 			panel: _PRE_PANEL
-		}
-	})();
+		};
+	}();
 
 /***/ },
 /* 3 */
@@ -1082,7 +1083,7 @@
 		this._init();
 	}
 
-	PreViewPage.prototype.rest = function () {
+	PreViewPage.prototype.reset = function () {
 		this.preView.reset();
 	};
 

@@ -3,11 +3,11 @@
  * @author wulunyi
  */
 'use strict';
-require('src/animation');
-require('src/style');
+require('./animation');
+require('./style');
 
-var util = require('src/util');
-var PreViewPage = require('src/pre-view-page');
+var util = require('./util');
+var PreViewPage = require('./pre-view-page');
 var Hammer = require('hammerjs');
 
 module.exports = (function () {

@@ -36,7 +36,7 @@
 // }
 
 // preViewImg('https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg');
-var previewimg = require('previewimg');
+var previewimg = require('../../index');
 console.log(previewimg);
 
 previewimg.show(['https://avatars3.githubusercontent.com/u/3277634?v=3&s=460','https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
