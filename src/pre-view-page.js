@@ -20,7 +20,7 @@ function PreViewPage(size, src) {
 	this._init();
 }
 
-PreViewPage.prototype.rest = function () {
+PreViewPage.prototype.reset = function () {
 	this.preView.reset();
 };
 
