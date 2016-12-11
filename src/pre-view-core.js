@@ -4,7 +4,6 @@
  */
 'use strict';
 
-require('src/animation');
 var util = require('src/util');
 
 function PreViewImg(canvas, size, src, options) {

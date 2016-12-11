@@ -4,7 +4,7 @@
  */
 'use strict';
 require('src/animation');
-require('src/css/pre-view.scss');
+require('src/style');
 
 var util = require('src/util');
 var PreViewPage = require('src/pre-view-page');
