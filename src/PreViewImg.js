@@ -4,10 +4,7 @@
  */
 'use strict';
 
-import 'src/animation';
-import util from 'src/util';
-
-export default class PreViewImg {
+class PreViewImg {
 	constructor(canvas, size, src, options) {
 		if (canvas.getContext) {
 			//解决android的图片预览模糊的问题

@@ -2,4 +2,4 @@
 
 var preview = require('./src/pre-view');
 
-exports.preview = preview;
+module.exports = preview;

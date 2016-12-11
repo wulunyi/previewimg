@@ -3,27 +3,19 @@
  * @author wulunyi.
  */
 'use strict';
-
-export default {
-	/**
-	 * @description 获取离屏canvas
-	 * @param img {object} 图片对象
-	 * @param w {number} 离屏宽度
-	 * @param h {number} 离屏高度
-	 * @return {object} 返回离屏canvas
-	 */
-	getOffCanvas:(()=>{
+var util = {
+	getOffCanvas:(function(){
 		var cache = {};
 		var _shift = Array.prototype.shift;
 
 		return function (){
-			let img = _shift.call(arguments);
-			let w = _shift.call(arguments);
-			let h = _shift.call(arguments);
+			var img = _shift.call(arguments);
+			var w = _shift.call(arguments);
+			var h = _shift.call(arguments);
 
 			if(!cache[img.src]){
-				let canvas = document.createElement('canvas');
-				let ctx = canvas.getContext('2d');
+				var canvas = document.createElement('canvas');
+				var ctx = canvas.getContext('2d');
 
 				canvas.width = w;
 				canvas.height = h;
@@ -69,8 +61,8 @@ export default {
 		}
 	})(),
 
-	getSize(dom) {
-		let boundData = dom.getBoundingClientRect();
+	getSize: function(dom) {
+		var boundData = dom.getBoundingClientRect();
 
 		return {
 			height: boundData.height,
@@ -78,19 +70,21 @@ export default {
 		}
 	},
 
-	toFixed(num) {
+	toFixed: function(num) {
 		return Math.floor(num * 100) / 100;
 	},
 
-	createDom() {
-		let tagName = [].shift.call(arguments) || 'div';
-		let options = [].shift.call(arguments) || {};
-		let resultDom = document.createElement(tagName);
+	createDom: function() {
+		var tagName = [].shift.call(arguments) || 'div';
+		var options = [].shift.call(arguments) || {};
+		var resultDom = document.createElement(tagName);
 
-		for (let propoty in options) {
+		for (var propoty in options) {
 			resultDom[propoty] = options[propoty];
 		}
 
 		return resultDom;
 	}
-}
+};
+
+module.exports = util;

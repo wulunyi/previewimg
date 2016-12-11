@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "8c16cce98ce503a2a91b"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "abd1bb07184a3c6697c6"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -581,18 +581,62 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * @description Created by wulunyi on 16/10/5.
+	 * @author wulunyi
+	 */
 	'use strict';
 
-	var _preView = __webpack_require__(1);
+	// import 'css/index.scss';
+	// import PreViewWrap from 'src/PreViewWrap';
+	// import Hammer      from 'hammerjs';
+	// import Immutable   from 'immutable';
 
-	var _preView2 = _interopRequireDefault(_preView);
+	// window.Immutable = Immutable;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	// function preViewImg(src){
+	//     let h = window.innerHeight;
+	//     let w = window.innerWidth;
+	//
+	//     let size = {
+	//         width: w,
+	//         height: h
+	//     };
+	//
+	//     let rootDom = document.createElement('div');
+	//
+	//     rootDom.style.width    = '100vw';
+	//     rootDom.style.height   = '100vh';
+	//     rootDom.style.position = 'absolute';
+	//     rootDom.style.top      = 0;
+	//     rootDom.style.left     = 0;
+	//     rootDom.style.zIndex   = 10000;
+	//
+	//     let preViewWrap = new PreViewWrap(size, src);
+	//
+	//     rootDom.appendChild(preViewWrap.canvas);
+	//     document.body.appendChild(rootDom);
+	// }
 
-	window.preview = _preView2.default;
+	// preViewImg('https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg');
+
+	var previewimg = __webpack_require__(1);
+	console.log(previewimg);
+
+	previewimg.show('https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg');
 
 /***/ },
 /* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var preview = __webpack_require__(2);
+
+	module.exports = preview;
+
+/***/ },
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -601,29 +645,14 @@
 	 */
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _util = __webpack_require__(2);
-
-	var _util2 = _interopRequireDefault(_util);
-
 	__webpack_require__(3);
+	__webpack_require__(4);
 
-	var _PreViewWrap = __webpack_require__(4);
+	var util = __webpack_require__(8);
+	var PreViewPage = __webpack_require__(9);
+	var Hammer = __webpack_require__(11);
 
-	var _PreViewWrap2 = _interopRequireDefault(_PreViewWrap);
-
-	__webpack_require__(7);
-
-	var _hammerjs = __webpack_require__(6);
-
-	var _hammerjs2 = _interopRequireDefault(_hammerjs);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.default = function () {
+	module.exports = function () {
 		var _PRE_PANEL = null;
 		var _tempChild = null;
 		var _timer = null;
@@ -639,15 +668,15 @@
 		};
 
 		if (!_PRE_PANEL) {
-			_PRE_PANEL = _util2.default.createDom('div', {
+			_PRE_PANEL = util.createDom('div', {
 				id: 'pv-stage'
 			});
 
-			var pageWrapDom = _util2.default.createDom('div', {
+			var pageWrapDom = util.createDom('div', {
 				className: 'pv-show-box'
 			});
 
-			var pageItemDom = _util2.default.createDom('span', {
+			var pageItemDom = util.createDom('span', {
 				className: 'pv-show-page'
 			});
 
@@ -730,7 +759,7 @@
 		};
 
 		function _openEvent(dom) {
-			var hammer = new _hammerjs2.default(dom);
+			var hammer = new Hammer(dom);
 			_eventHandler.dom = dom;
 
 			for (var event in _eventHandler) {
@@ -739,7 +768,7 @@
 		}
 
 		function _render(srcArr) {
-			var dom = _util2.default.createDom('ul', {
+			var dom = util.createDom('ul', {
 				className: 'pv-panel'
 			});
 
@@ -773,8 +802,8 @@
 
 		function _createPreView() {
 			var src = [].shift.call(arguments);
-			var innerDom = _util2.default.createDom('li');
-			var preViewWrap = new _PreViewWrap2.default(_SIZE, src);
+			var innerDom = util.createDom('li');
+			var preViewWrap = new PreViewPage(_SIZE, src);
 
 			_preList.push(preViewWrap);
 			innerDom.appendChild(preViewWrap.canvas);
@@ -831,7 +860,391 @@
 	}();
 
 /***/ },
-/* 2 */
+/* 3 */
+/***/ function(module, exports) {
+
+	/**
+	 * @description 动画API兼容处理
+	 */
+	'use strict';
+
+	(function () {
+	    var lastTime = 0;
+	    var vendors = ['webkit', 'moz'];
+
+	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+	        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	    }
+
+	    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
+	        var currTime = new Date().getTime();
+	        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	        var id = window.setTimeout(function () {
+	            callback(currTime + timeToCall);
+	        }, timeToCall);
+
+	        lastTime = currTime + timeToCall;
+	        return id;
+	    };
+
+	    if (!window.cancelAnimationFrame) {
+	        window.cancelAnimationFrame = function (id) {
+	            clearTimeout(id);
+	        };
+	    }
+	})();
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(5);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(7)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(true) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept(5, function() {
+				var newContent = __webpack_require__(5);
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(6)();
+	// imports
+
+
+	// module
+	exports.push([module.id, "#pv-stage {\n  position: absolute;\n  left: 0;\n  top: 0;\n  overflow: hidden;\n  height: 100vh;\n  width: 100vw;\n  background: black; }\n\n.pv-panel {\n  position: absolute;\n  left: 0;\n  top: 0;\n  margin: 0;\n  padding: 0;\n  min-width: 100vw;\n  height: 100%;\n  list-style: none;\n  -webkit-transition: all 200ms ease;\n  -moz-transition: all 200ms ease;\n  -ms-transition: all 200ms ease;\n  transition: all 200ms ease; }\n  .pv-panel li {\n    float: left;\n    width: 100vw; }\n  .pv-panel canvas {\n    width: 100vw; }\n\n.pv-show-box {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  width: 100%; }\n\n.pv-show-page {\n  position: absolute;\n  left: 50%;\n  bottom: 30px;\n  -webkit-transform: translateX(-50);\n  -moz-transform: translateX(-50);\n  -ms-transform: translateX(-50);\n  -o-transform: translateX(-50);\n  transform: translateX(-50);\n  line-height: 1em;\n  color: #7b7b7b; }\n", ""]);
+
+	// exports
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	// css base code, injected by the css-loader
+	module.exports = function() {
+		var list = [];
+
+		// return the list of modules as css string
+		list.toString = function toString() {
+			var result = [];
+			for(var i = 0; i < this.length; i++) {
+				var item = this[i];
+				if(item[2]) {
+					result.push("@media " + item[2] + "{" + item[1] + "}");
+				} else {
+					result.push(item[1]);
+				}
+			}
+			return result.join("");
+		};
+
+		// import a list of modules into the list
+		list.i = function(modules, mediaQuery) {
+			if(typeof modules === "string")
+				modules = [[null, modules, ""]];
+			var alreadyImportedModules = {};
+			for(var i = 0; i < this.length; i++) {
+				var id = this[i][0];
+				if(typeof id === "number")
+					alreadyImportedModules[id] = true;
+			}
+			for(i = 0; i < modules.length; i++) {
+				var item = modules[i];
+				// skip already imported module
+				// this implementation is not 100% perfect for weird media query combinations
+				//  when a module is imported multiple times with different media queries.
+				//  I hope this will never occur (Hey this way we have smaller bundles)
+				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
+					if(mediaQuery && !item[2]) {
+						item[2] = mediaQuery;
+					} else if(mediaQuery) {
+						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
+					}
+					list.push(item);
+				}
+			}
+		};
+		return list;
+	};
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/*
+		MIT License http://www.opensource.org/licenses/mit-license.php
+		Author Tobias Koppers @sokra
+	*/
+	var stylesInDom = {},
+		memoize = function(fn) {
+			var memo;
+			return function () {
+				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
+				return memo;
+			};
+		},
+		isOldIE = memoize(function() {
+			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
+		}),
+		getHeadElement = memoize(function () {
+			return document.head || document.getElementsByTagName("head")[0];
+		}),
+		singletonElement = null,
+		singletonCounter = 0,
+		styleElementsInsertedAtTop = [];
+
+	module.exports = function(list, options) {
+		if(false) {
+			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
+		}
+
+		options = options || {};
+		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
+		// tags it will allow on a page
+		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
+
+		// By default, add <style> tags to the bottom of <head>.
+		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
+
+		var styles = listToStyles(list);
+		addStylesToDom(styles, options);
+
+		return function update(newList) {
+			var mayRemove = [];
+			for(var i = 0; i < styles.length; i++) {
+				var item = styles[i];
+				var domStyle = stylesInDom[item.id];
+				domStyle.refs--;
+				mayRemove.push(domStyle);
+			}
+			if(newList) {
+				var newStyles = listToStyles(newList);
+				addStylesToDom(newStyles, options);
+			}
+			for(var i = 0; i < mayRemove.length; i++) {
+				var domStyle = mayRemove[i];
+				if(domStyle.refs === 0) {
+					for(var j = 0; j < domStyle.parts.length; j++)
+						domStyle.parts[j]();
+					delete stylesInDom[domStyle.id];
+				}
+			}
+		};
+	}
+
+	function addStylesToDom(styles, options) {
+		for(var i = 0; i < styles.length; i++) {
+			var item = styles[i];
+			var domStyle = stylesInDom[item.id];
+			if(domStyle) {
+				domStyle.refs++;
+				for(var j = 0; j < domStyle.parts.length; j++) {
+					domStyle.parts[j](item.parts[j]);
+				}
+				for(; j < item.parts.length; j++) {
+					domStyle.parts.push(addStyle(item.parts[j], options));
+				}
+			} else {
+				var parts = [];
+				for(var j = 0; j < item.parts.length; j++) {
+					parts.push(addStyle(item.parts[j], options));
+				}
+				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
+			}
+		}
+	}
+
+	function listToStyles(list) {
+		var styles = [];
+		var newStyles = {};
+		for(var i = 0; i < list.length; i++) {
+			var item = list[i];
+			var id = item[0];
+			var css = item[1];
+			var media = item[2];
+			var sourceMap = item[3];
+			var part = {css: css, media: media, sourceMap: sourceMap};
+			if(!newStyles[id])
+				styles.push(newStyles[id] = {id: id, parts: [part]});
+			else
+				newStyles[id].parts.push(part);
+		}
+		return styles;
+	}
+
+	function insertStyleElement(options, styleElement) {
+		var head = getHeadElement();
+		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
+		if (options.insertAt === "top") {
+			if(!lastStyleElementInsertedAtTop) {
+				head.insertBefore(styleElement, head.firstChild);
+			} else if(lastStyleElementInsertedAtTop.nextSibling) {
+				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
+			} else {
+				head.appendChild(styleElement);
+			}
+			styleElementsInsertedAtTop.push(styleElement);
+		} else if (options.insertAt === "bottom") {
+			head.appendChild(styleElement);
+		} else {
+			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
+		}
+	}
+
+	function removeStyleElement(styleElement) {
+		styleElement.parentNode.removeChild(styleElement);
+		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
+		if(idx >= 0) {
+			styleElementsInsertedAtTop.splice(idx, 1);
+		}
+	}
+
+	function createStyleElement(options) {
+		var styleElement = document.createElement("style");
+		styleElement.type = "text/css";
+		insertStyleElement(options, styleElement);
+		return styleElement;
+	}
+
+	function createLinkElement(options) {
+		var linkElement = document.createElement("link");
+		linkElement.rel = "stylesheet";
+		insertStyleElement(options, linkElement);
+		return linkElement;
+	}
+
+	function addStyle(obj, options) {
+		var styleElement, update, remove;
+
+		if (options.singleton) {
+			var styleIndex = singletonCounter++;
+			styleElement = singletonElement || (singletonElement = createStyleElement(options));
+			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
+			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
+		} else if(obj.sourceMap &&
+			typeof URL === "function" &&
+			typeof URL.createObjectURL === "function" &&
+			typeof URL.revokeObjectURL === "function" &&
+			typeof Blob === "function" &&
+			typeof btoa === "function") {
+			styleElement = createLinkElement(options);
+			update = updateLink.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+				if(styleElement.href)
+					URL.revokeObjectURL(styleElement.href);
+			};
+		} else {
+			styleElement = createStyleElement(options);
+			update = applyToTag.bind(null, styleElement);
+			remove = function() {
+				removeStyleElement(styleElement);
+			};
+		}
+
+		update(obj);
+
+		return function updateStyle(newObj) {
+			if(newObj) {
+				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
+					return;
+				update(obj = newObj);
+			} else {
+				remove();
+			}
+		};
+	}
+
+	var replaceText = (function () {
+		var textStore = [];
+
+		return function (index, replacement) {
+			textStore[index] = replacement;
+			return textStore.filter(Boolean).join('\n');
+		};
+	})();
+
+	function applyToSingletonTag(styleElement, index, remove, obj) {
+		var css = remove ? "" : obj.css;
+
+		if (styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = replaceText(index, css);
+		} else {
+			var cssNode = document.createTextNode(css);
+			var childNodes = styleElement.childNodes;
+			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
+			if (childNodes.length) {
+				styleElement.insertBefore(cssNode, childNodes[index]);
+			} else {
+				styleElement.appendChild(cssNode);
+			}
+		}
+	}
+
+	function applyToTag(styleElement, obj) {
+		var css = obj.css;
+		var media = obj.media;
+
+		if(media) {
+			styleElement.setAttribute("media", media)
+		}
+
+		if(styleElement.styleSheet) {
+			styleElement.styleSheet.cssText = css;
+		} else {
+			while(styleElement.firstChild) {
+				styleElement.removeChild(styleElement.firstChild);
+			}
+			styleElement.appendChild(document.createTextNode(css));
+		}
+	}
+
+	function updateLink(linkElement, obj) {
+		var css = obj.css;
+		var sourceMap = obj.sourceMap;
+
+		if(sourceMap) {
+			// http://stackoverflow.com/a/26603875
+			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
+		}
+
+		var blob = new Blob([css], { type: "text/css" });
+
+		var oldSrc = linkElement.href;
+
+		linkElement.href = URL.createObjectURL(blob);
+
+		if(oldSrc)
+			URL.revokeObjectURL(oldSrc);
+	}
+
+
+/***/ },
+/* 8 */
 /***/ function(module, exports) {
 
 	/**
@@ -840,17 +1253,7 @@
 	 */
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-	exports.default = {
-		/**
-	  * @description 获取离屏canvas
-	  * @param img {object} 图片对象
-	  * @param w {number} 离屏宽度
-	  * @param h {number} 离屏高度
-	  * @return {object} 返回离屏canvas
-	  */
+	var util = {
 		getOffCanvas: function () {
 			var cache = {};
 			var _shift = Array.prototype.shift;
@@ -916,9 +1319,11 @@
 				width: boundData.width
 			};
 		},
+
 		toFixed: function toFixed(num) {
 			return Math.floor(num * 100) / 100;
 		},
+
 		createDom: function createDom() {
 			var tagName = [].shift.call(arguments) || 'div';
 			var options = [].shift.call(arguments) || {};
@@ -932,644 +1337,496 @@
 		}
 	};
 
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	/**
-	 * @description 动画API兼容处理
-	 */
-	'use strict';
-
-	(function () {
-	    var lastTime = 0;
-	    var vendors = ['webkit', 'moz'];
-
-	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-	        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-	    }
-
-	    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
-	        var currTime = new Date().getTime();
-	        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	        var id = window.setTimeout(function () {
-	            callback(currTime + timeToCall);
-	        }, timeToCall);
-
-	        lastTime = currTime + timeToCall;
-	        return id;
-	    };
-
-	    if (!window.cancelAnimationFrame) {
-	        window.cancelAnimationFrame = function (id) {
-	            clearTimeout(id);
-	        };
-	    }
-	})();
+	module.exports = util;
 
 /***/ },
-/* 4 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @description Created by wulunyi on 16/10/8.
-	 * @description 单个预览容器
+	 * @description Created by wulunyi on 16/12/11.
 	 * @author wulunyi
 	 */
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
+	var PreView = __webpack_require__(10);
+	var Hammer = __webpack_require__(11);
+	var util = __webpack_require__(8);
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	function PreViewPage(size, src) {
+		this.canvas = util.createDom('canvas');
 
-	var _PreViewImg = __webpack_require__(5);
+		this.hammer = new Hammer(this.canvas);
+		this.preView = new PreView(this.canvas, size, src);
 
-	var _PreViewImg2 = _interopRequireDefault(_PreViewImg);
+		this.pinchPoint = null;
+		this.scale = 1;
 
-	var _hammerjs = __webpack_require__(6);
+		this._init();
+	}
 
-	var _hammerjs2 = _interopRequireDefault(_hammerjs);
+	PreViewPage.prototype.rest = function () {
+		this.preView.reset();
+	};
 
-	var _util = __webpack_require__(2);
+	PreViewPage.prototype._init = function () {
+		var hammer = this.hammer;
 
-	var _util2 = _interopRequireDefault(_util);
+		hammer.get('pinch').set({ enable: true });
+		hammer.get('doubletap').set({ posThreshold: 60 });
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+		hammer.on('doubletap', this._handleDoubleTap.bind(this)).on('pan', this._handlePan.bind(this)).on('panend', this._handlePanEnd.bind(this)).on('pinch', this._handlePinch.bind(this)).on('pinchend', this._handlePinchEnd.bind(this));
+	};
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	PreViewPage.prototype._handleDoubleTap = function (ev) {
+		var touchPoint = ev.center; // 获取点击数据
 
-	var PreViewWrap = function () {
-		function PreViewWrap(size, src) {
-			_classCallCheck(this, PreViewWrap);
+		this.preView.scaling(null, touchPoint.x, touchPoint.y);
+	};
 
-			this.canvas = _util2.default.createDom('canvas');
+	PreViewPage.prototype._handlePinch = function (ev) {
+		var center = ev.center;
 
-			this.hammer = new _hammerjs2.default(this.canvas);
-			this.preView = new _PreViewImg2.default(this.canvas, size, src);
-
-			this.pinchPoint = null;
-			this.scale = 1;
-
-			this._init();
+		if (this.pinchPoint === null) {
+			this.pinchPoint = center;
 		}
 
-		_createClass(PreViewWrap, [{
-			key: 'reset',
-			value: function reset() {
-				this.preView.reset();
-			}
-		}, {
-			key: '_init',
-			value: function _init() {
-				var hammer = this.hammer;
+		this.preView.scaled(ev.scale / this.scale, this.pinchPoint.x, this.pinchPoint.y);
+		this.scale = ev.scale;
 
-				hammer.get('pinch').set({ enable: true });
-				hammer.get('doubletap').set({ posThreshold: 60 });
+		ev.srcEvent.preventDefault();
+		return false;
+	};
 
-				hammer.on('doubletap', this._handleDoubleTap.bind(this)).on('pan', this._handlePan.bind(this)).on('panend', this._handlePanEnd.bind(this)).on('pinch', this._handlePinch.bind(this)).on('pinchend', this._handlePinchEnd.bind(this));
-			}
-		}, {
-			key: '_handleDoubleTap',
-			value: function _handleDoubleTap(ev) {
-				var touchPoint = ev.center; // 获取点击数据
+	PreViewPage.prototype._handlePinchEnd = function () {
+		//重置
+		this.scale = 1;
+		this.pinchPoint = null;
+	};
 
-				this.preView.scaling(null, touchPoint.x, touchPoint.y);
-			}
-		}, {
-			key: '_handlePinch',
-			value: function _handlePinch(ev) {
-				var center = ev.center;
+	PreViewPage.prototype._handlePan = function (ev) {
+		var panPoint = ev.center;
+		var lastPanPoint = this.panPoint || panPoint;
 
-				if (this.pinchPoint === null) {
-					this.pinchPoint = center;
-				}
+		var changePoint = {
+			x: panPoint.x - lastPanPoint.x,
+			y: panPoint.y - lastPanPoint.y
+		};
 
-				this.preView.scaled(ev.scale / this.scale, this.pinchPoint.x, this.pinchPoint.y);
-				this.scale = ev.scale;
+		this.isMoving = this.preView.moving(changePoint.x, changePoint.y);
 
-				ev.srcEvent.preventDefault();
-				return false;
-			}
-		}, {
-			key: '_handlePinchEnd',
-			value: function _handlePinchEnd() {
-				//重置
-				this.scale = 1;
-				this.pinchPoint = null;
-			}
-		}, {
-			key: '_handlePan',
-			value: function _handlePan(ev) {
-				var panPoint = ev.center;
-				var lastPanPoint = this.panPoint || panPoint;
+		if (this.isMoving) {
+			this.panPoint = panPoint;
 
-				var changePoint = {
-					x: panPoint.x - lastPanPoint.x,
-					y: panPoint.y - lastPanPoint.y
-				};
+			// 阻止冒泡
+			ev.srcEvent.stopPropagation();
+			return false;
+		}
+	};
 
-				this.isMoving = this.preView.moving(changePoint.x, changePoint.y);
+	PreViewPage.prototype._handlePanEnd = function (ev) {
+		this.panPoint = null;
 
-				if (this.isMoving) {
-					this.panPoint = panPoint;
+		if (this.isMoving) {
+			// 阻止冒泡
+			ev.srcEvent.stopPropagation();
+			return false;
+		}
+	};
 
-					// 阻止冒泡
-					ev.srcEvent.stopPropagation();
-					return false;
-				}
-			}
-		}, {
-			key: '_handlePanEnd',
-			value: function _handlePanEnd(ev) {
-				this.panPoint = null;
-
-				if (this.isMoving) {
-					// 阻止冒泡
-					ev.srcEvent.stopPropagation();
-					return false;
-				}
-			}
-		}]);
-
-		return PreViewWrap;
-	}();
-
-	exports.default = PreViewWrap;
+	module.exports = PreViewPage;
 
 /***/ },
-/* 5 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
-	 * @description Created by wulunyi on 16/10/8.
+	 * @description Created by wulunyi on 16/12/11.
 	 * @author wulunyi
 	 */
 	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	__webpack_require__(3);
+	var util = __webpack_require__(8);
 
-	var _util = __webpack_require__(2);
+	function PreViewImg(canvas, size, src, options) {
+		if (canvas.getContext) {
+			//解决android的图片预览模糊的问题
+			var dpr = window.devicePixelRatio || 1;
+			dpr = dpr > 2 ? 1.5 : dpr;
 
-	var _util2 = _interopRequireDefault(_util);
+			var w = size.width * dpr;
+			var h = size.height * dpr;
 
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+			// 解决三星等出现横屏后突然竖屏图像异常的问题
+			if (w > h) {
+				var _ref = [h, w];
+				w = _ref[0];
+				h = _ref[1];
+			}
 
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+			// 面板容器宽高
+			canvas.width = w;
+			canvas.height = h;
 
-	var PreViewImg = function () {
-		function PreViewImg(canvas, size, src, options) {
-			_classCallCheck(this, PreViewImg);
+			// 绘制面板大小
+			this.w = w;
+			this.h = h;
 
-			if (canvas.getContext) {
-				//解决android的图片预览模糊的问题
-				var dpr = window.devicePixelRatio || 1;
-				dpr = dpr > 2 ? 1.5 : dpr;
+			this.ratio = dpr;
 
-				var w = size.width * dpr;
-				var h = size.height * dpr;
+			this.canvas = canvas;
+			this.ctx = canvas.getContext('2d');
+			this.offCanvas = null;
 
-				// 解决三星等出现横屏后突然竖屏图像异常的问题
-				if (w > h) {
-					var _ref = [h, w];
-					w = _ref[0];
-					h = _ref[1];
-				}
+			// 可选参数
+			var defaultOptions = {
+				maxScale: 4, // 最大缩放边界
+				minScale: 1, // 最小缩放边界
+				doubleTapScale: 2 // 双击缩放大小
+				//rotate: false,
+			};
 
-				// 面板容器宽高
-				canvas.width = w;
-				canvas.height = h;
+			this.options = options || defaultOptions;
 
-				// 绘制面板大小
-				this.w = w;
-				this.h = h;
+			this.sw = 0; // 绘制宽高
+			this.sh = 0; // 绘制宽高
 
-				this.ratio = dpr;
+			this.ox = this.w / 2; // 绘制原点
+			this.oy = this.h / 2; // 绘制原点
 
-				this.canvas = canvas;
-				this.ctx = canvas.getContext('2d');
-				this.offCanvas = null;
+			this.px = 0; // 绘制开始坐标
+			this.py = 0; // 绘制开始坐标
 
-				// 可选参数
-				var defaultOptions = {
-					maxScale: 4, // 最大缩放边界
-					minScale: 1, // 最小缩放边界
-					doubleTapScale: 2 // 双击缩放大小
-					//rotate: false,
-				};
+			this.scale = 1; // 绘制缩放比
 
-				this.options = options || defaultOptions;
+			this.timer = null; // 动画返回锚点
 
-				this.sw = 0; // 绘制宽高
-				this.sh = 0; // 绘制宽高
+			this.cache = {};
 
-				this.ox = this.w / 2; // 绘制原点
-				this.oy = this.h / 2; // 绘制原点
+			this._init(src); // 初始化
+		} else {
+			console.warn('参数错误,需要canvas dom');
+		}
+	}
 
-				this.px = 0; // 绘制开始坐标
-				this.py = 0; // 绘制开始坐标
+	PreViewImg.prototype._init = function (src) {
+		this._loading('start'); // 开启加载中动画...
 
-				this.scale = 1; // 绘制缩放比
+		var self = this;
 
-				this.timer = null; // 动画返回锚点
+		self._pullImg(src, function (imgObj) {
+			self._loading('end')._getInitData(imgObj)._draw(imgObj);
+		});
+	};
 
-				this.cache = {};
+	PreViewImg.prototype._draw = function (imgObj) {
+		var ctx = this.ctx;
 
-				this._init(src); // 初始化
+		if (imgObj != undefined) {
+			this.offCanvas = util.getOffCanvas(imgObj, this.sw, this.sw);
+		}
+
+		ctx.clearRect(0, 0, this.w, this.h);
+		ctx.save();
+		ctx.translate(this.ox, this.oy);
+		ctx.scale(this.scale, this.scale);
+		ctx.drawImage(this.offCanvas, this.px, this.py, this.sw, this.sh);
+		ctx.restore();
+
+		return this;
+	};
+
+	PreViewImg.prototype._getInitData = function (imgObj) {
+		// 图片自身的宽高
+		var sw = imgObj.width;
+		var sh = imgObj.height;
+
+		// 面板的宽高
+		var dw = this.w;
+		var dh = this.h;
+
+		var ratio = dw / sw; // 图片绘制到面板本身的缩放比
+
+		// 已宽为准进行缩放后图片在面板的高度不超过面板本身的高度
+		if (ratio * sh <= dh) {
+			this.sw = dw;
+			this.sh = util.toFixed(sh * ratio);
+		} else {
+			ratio = dh / sh;
+
+			this.sh = dh;
+			this.sw = ratio * sw;
+		}
+
+		this.px = -(this.sw / 2);
+		this.py = -(this.sh / 2);
+
+		return this;
+	};
+
+	PreViewImg.prototype._loading = function (command) {
+		var self = this;
+		var w = self.w;
+		var h = self.h;
+		var ctx = self.ctx;
+		var count = 0; // 计数
+
+		cancelAnimationFrame(this.timer);
+
+		ctx.clearRect(0, 0, w, h);
+		ctx.fillStyle = '#ffffff';
+		ctx.strokeStyle = '#ffffff';
+
+		var base = self.ratio;
+
+		/**
+	  * @description 加载动画
+	  */
+		function loadingAnimation() {
+			ctx.clearRect(0, 0, w, h);
+			ctx.save();
+			ctx.translate(w / 2, h / 2);
+			ctx.rotate(base / 2 * 5 * count * Math.PI / 180);
+
+			for (var i = 0; i < 9; i++) {
+				ctx.save();
+
+				ctx.rotate(36 * i * Math.PI / 180);
+				ctx.beginPath();
+				ctx.arc(30 * base, 30 * base, (1 + i) * base, 0, Math.PI * 2, false);
+				ctx.closePath();
+				ctx.fill();
+				ctx.stroke();
+
+				ctx.restore();
+			}
+
+			ctx.restore();
+
+			count++;
+
+			self.timer = requestAnimationFrame(loadingAnimation);
+		}
+
+		if (command !== 'end') {
+			loadingAnimation();
+		}
+
+		return this;
+	};
+
+	PreViewImg.prototype._pullImg = function () {
+		var cache = this.cache;
+		var src = [].shift.call(arguments) || '';
+		var cb = [].shift.call(arguments);
+
+		if (cache[src]) {
+			cb && cb(cache[src]);
+		} else {
+			var imgObj = document.createElement('img');
+
+			imgObj.addEventListener('load', function () {
+				cache[src] = imgObj;
+
+				cb && cb(imgObj);
+			});
+
+			imgObj.addEventListener('error', function () {
+				console.log('-> 图片加载失败,请检查图片是否存在');
+			});
+
+			imgObj.src = src;
+		}
+	};
+
+	PreViewImg.prototype.animation = function (toScale) {
+		cancelAnimationFrame(this.timer);
+
+		var times = 10;
+		var speed = (toScale - this.scale) / times;
+		var base = this.scale;
+		var count = 1;
+		var self = this;
+
+		/**
+	  * @description 动画
+	  */
+		function innerAnimate() {
+			if (count <= times) {
+				var ratio = base + count * speed;
+
+				self.scaling(ratio);
+				count++;
+				self.timer = requestAnimationFrame(innerAnimate);
 			} else {
-				console.warn('参数错误,需要canvas dom');
+				self.scaling(toScale);
+
+				cancelAnimationFrame(self.timer);
 			}
 		}
 
-		_createClass(PreViewImg, [{
-			key: '_pullImg',
-			value: function _pullImg() {
-				var cache = this.cache;
-				var src = [].shift.call(arguments) || '';
-				var cb = [].shift.call(arguments);
+		innerAnimate();
+	};
 
-				if (cache[src]) {
-					cb && cb(cache[src]);
-				} else {
-					(function () {
-						var imgObj = document.createElement('img');
+	PreViewImg.prototype.scaling = function (scale, tx, ty) {
+		tx = this.ratio * tx;
+		ty = this.ratio * ty;
 
-						imgObj.addEventListener('load', function () {
-							cache[src] = imgObj;
+		if (this.offCanvas == null) {
+			return this;
+		}
 
-							cb && cb(imgObj);
-						});
+		if (scale === null) {
+			var toScale = 0;
 
-						imgObj.addEventListener('error', function () {
-							console.log('-> 图片加载失败,请检查图片是否存在');
-						});
-
-						imgObj.src = src;
-					})();
-				}
-			}
-		}, {
-			key: '_init',
-			value: function _init(src) {
-				this._loading('start'); // 开启加载中动画...
-
-				var self = this;
-
-				self._pullImg(src, function (imgObj) {
-					self._loading('end')._getInitData(imgObj)._draw(imgObj);
-				});
-			}
-		}, {
-			key: '_getInitData',
-			value: function _getInitData(imgObj) {
-				// 图片自身的宽高
-				var sw = imgObj.width;
-				var sh = imgObj.height;
-
-				// 面板的宽高
-				var dw = this.w;
-				var dh = this.h;
-
-				var ratio = dw / sw; // 图片绘制到面板本身的缩放比
-
-				// 已宽为准进行缩放后图片在面板的高度不超过面板本身的高度
-				if (ratio * sh <= dh) {
-					this.sw = dw;
-					this.sh = _util2.default.toFixed(sh * ratio);
-				} else {
-					ratio = dh / sh;
-
-					this.sh = dh;
-					this.sw = ratio * sw;
-				}
-
-				this.px = -(this.sw / 2);
-				this.py = -(this.sh / 2);
-
-				return this;
+			if (this.scale == 1) {
+				this._getBiggerOriginPoint(tx, ty, this.options.doubleTapScale);
+				toScale = this.options.doubleTapScale;
+			} else {
+				this._getScaleSmallerPoint();
+				toScale = 1;
 			}
 
-			/**
-	   * @description 加载中动画
-	   * @param command
-	   * @return {PreViewImg}
-	   */
+			this.animation(toScale);
+		} else if (scale >= 1) {
+			this.scale = scale;
+			this._draw();
+		}
 
-		}, {
-			key: '_loading',
-			value: function _loading(command) {
-				var self = this;
-				var w = self.w;
-				var h = self.h;
-				var ctx = self.ctx;
-				var count = 0; // 计数
+		return this;
+	};
 
-				cancelAnimationFrame(this.timer);
+	PreViewImg.prototype.reset = function () {
+		if (this.scale !== 1) {
+			this._getScaleSmallerPoint();
+			var toScale = 1;
 
-				ctx.clearRect(0, 0, w, h);
-				ctx.fillStyle = '#ffffff';
-				ctx.strokeStyle = '#ffffff';
+			this.animation(toScale);
+		}
+	};
 
-				var base = self.ratio;
+	PreViewImg.prototype.scaled = function (scale, x, y) {
+		x = this.ratio * x;
+		y = this.ratio * y;
 
-				/**
-	    * @description 加载动画
-	    */
-				function loadingAnimation() {
-					ctx.clearRect(0, 0, w, h);
-					ctx.save();
-					ctx.translate(w / 2, h / 2);
-					ctx.rotate(base / 2 * 5 * count * Math.PI / 180);
+		var toScale = this.scale * scale;
 
-					for (var i = 0; i < 9; i++) {
-						ctx.save();
+		if (scale < 1) {
+			this._getScaleSmallerPoint();
+		} else {
+			if (this.panchX != x && this.panchY != y) {
+				this.panchX = x;
+				this.panchY = y;
 
-						ctx.rotate(36 * i * Math.PI / 180);
-						ctx.beginPath();
-						ctx.arc(30 * base, 30 * base, (1 + i) * base, 0, Math.PI * 2, false);
-						ctx.closePath();
-						ctx.fill();
-						ctx.stroke();
-
-						ctx.restore();
-					}
-
-					ctx.restore();
-
-					count++;
-
-					self.timer = requestAnimationFrame(loadingAnimation);
-				}
-
-				if (command !== 'end') {
-					loadingAnimation();
-				}
-
-				return this;
+				this._getBiggerOriginPoint(x, y, toScale);
 			}
-		}, {
-			key: 'animation',
-			value: function animation(toScale) {
-				cancelAnimationFrame(this.timer);
+		}
 
-				var times = 10;
-				var speed = (toScale - this.scale) / times;
-				var base = this.scale;
-				var count = 1;
-				var self = this;
+		if (toScale > 4) {
+			toScale = 4;
+		}
 
-				/**
-	    * @description 动画
-	    */
-				function innerAnimate() {
-					if (count <= times) {
-						var ratio = base + count * speed;
+		this.scaling(toScale);
+	};
 
-						self.scaling(ratio);
-						count++;
-						self.timer = requestAnimationFrame(innerAnimate);
-					} else {
-						self.scaling(toScale);
+	PreViewImg.prototype._getScaleSmallerPoint = function () {
+		var scale = this.scale;
+		if (scale == 1) {
+			return;
+		}
 
-						cancelAnimationFrame(self.timer);
-					}
-				}
+		var cux = this.px * this.scale + this.ox;
+		var cuy = this.py * this.scale + this.oy;
 
-				innerAnimate();
+		var originPx = -this.sw / 2 + this.w / 2;
+		var originPy = -this.sh / 2 + this.h / 2;
+
+		this.ox = (cux - originPx * scale) / (1 - scale);
+		this.oy = (cuy - originPy * scale) / (1 - scale);
+
+		this.px = originPx - this.ox;
+		this.py = originPy - this.oy;
+
+		return this;
+	};
+
+	PreViewImg.prototype._getBiggerOriginPoint = function (tx, ty, scale) {
+		var cux = this.px * this.scale + this.ox;
+		var cuy = this.py * this.scale + this.oy;
+
+		var maxX = cux + this.sw;
+		var maxY = cuy + this.sh;
+
+		if (this.sw * scale < this.w) {
+			this.ox = this.w / 2;
+		} else if (tx >= cux && tx <= maxX) {
+			this.ox = tx;
+		} else if (tx < cux) {
+			this.ox = cux;
+		} else if (tx > maxX) {
+			this.ox = maxX;
+		}
+
+		if (this.sh * scale < this.h) {
+			this.oy = this.h / 2;
+		} else if (ty >= cuy && ty <= maxY) {
+			this.oy = ty;
+		} else if (ty <= cuy) {
+			this.oy = cuy;
+		} else if (ty >= maxY) {
+			this.oy = maxY;
+		}
+
+		this.px = (cux - this.ox) / this.scale;
+		this.py = (cuy - this.oy) / this.scale;
+
+		return this;
+	};
+
+	PreViewImg.prototype.moving = function (offsetX, offsetY) {
+		offsetX = this.ratio * offsetX;
+		offsetY = this.ratio * offsetY;
+
+		if (this.offCanvas == null) {
+			return false;
+		}
+
+		var curX = this.px * this.scale + this.ox + offsetX;
+		var curY = this.py * this.scale + this.oy + offsetY;
+
+		var curMaxY = curY + this.sh * this.scale;
+		var curMaxX = curX + this.sw * this.scale;
+
+		var MaxX = this.w - this.sw * this.scale;
+		var MaxY = this.h - this.sh * this.scale;
+
+		// 5是用来做垂直滑动,可能带动的横向滑动的容错处理
+		if (curX >= 0 && offsetX > 5 || curX <= MaxX && offsetX < -5 || this.scale <= 1) {
+			return false;
+		}
+
+		if (curY < 0 || curMaxY > this.h) {
+			if (curY <= 0 && curY >= MaxY || curY < MaxY && offsetY > 0 || curY > 0 && offsetY < 0) {
+				this.oy += offsetY;
 			}
+		}
 
-			/**
-	   * @description 缩放
-	   * @param scale
-	   * @param tx
-	   * @param ty
-	   * @return {PreViewImg}
-	   */
-
-		}, {
-			key: 'scaling',
-			value: function scaling(scale, tx, ty) {
-				tx = this.ratio * tx;
-				ty = this.ratio * ty;
-
-				if (this.offCanvas == null) {
-					return this;
-				}
-
-				if (scale === null) {
-					var toScale = 0;
-
-					if (this.scale == 1) {
-						this._getBiggerOriginPoint(tx, ty, this.options.doubleTapScale);
-						toScale = this.options.doubleTapScale;
-					} else {
-						this._getScaleSmallerPoint();
-						toScale = 1;
-					}
-
-					this.animation(toScale);
-				} else if (scale >= 1) {
-					this.scale = scale;
-					this._draw();
-				}
-
-				return this;
+		if (curX < 0 || curMaxX > this.w) {
+			if (curX <= 0 && curX >= MaxX || curX < MaxX && offsetX > 0 || curX > 0 && offsetX < 0) {
+				this.ox += offsetX;
 			}
-		}, {
-			key: 'reset',
-			value: function reset() {
-				if (this.scale !== 1) {
-					this._getScaleSmallerPoint();
-					var toScale = 1;
+		}
 
-					this.animation(toScale);
-				}
-			}
-		}, {
-			key: 'scaled',
-			value: function scaled(scale, x, y) {
-				x = this.ratio * x;
-				y = this.ratio * y;
+		this._draw();
 
-				var toScale = this.scale * scale;
+		return true;
+	};
 
-				if (scale < 1) {
-					this._getScaleSmallerPoint();
-				} else {
-					if (this.panchX != x && this.panchY != y) {
-						this.panchX = x;
-						this.panchY = y;
-
-						this._getBiggerOriginPoint(x, y, toScale);
-					}
-				}
-
-				if (toScale > 4) {
-					toScale = 4;
-				}
-
-				this.scaling(toScale);
-			}
-
-			/**
-	   * @description 根据当前坐标和最终坐标逆向推导缩放远点以及基于缩放原点的偏移坐标
-	   * @return {PreViewImg}
-	   */
-
-		}, {
-			key: '_getScaleSmallerPoint',
-			value: function _getScaleSmallerPoint() {
-				var scale = this.scale;
-				if (scale == 1) {
-					return;
-				}
-
-				var cux = this.px * this.scale + this.ox;
-				var cuy = this.py * this.scale + this.oy;
-
-				var originPx = -this.sw / 2 + this.w / 2;
-				var originPy = -this.sh / 2 + this.h / 2;
-
-				this.ox = (cux - originPx * scale) / (1 - scale);
-				this.oy = (cuy - originPy * scale) / (1 - scale);
-
-				this.px = originPx - this.ox;
-				this.py = originPy - this.oy;
-
-				return this;
-			}
-
-			/**
-	   * @description 获取放大的缩放原点
-	   * @param tx 点击坐标
-	   * @param ty 点击坐标
-	   * @param scale 缩放比例
-	   * @return {PreViewImg}
-	   */
-
-		}, {
-			key: '_getBiggerOriginPoint',
-			value: function _getBiggerOriginPoint(tx, ty, scale) {
-				var cux = this.px * this.scale + this.ox;
-				var cuy = this.py * this.scale + this.oy;
-
-				var maxX = cux + this.sw;
-				var maxY = cuy + this.sh;
-
-				if (this.sw * scale < this.w) {
-					this.ox = this.w / 2;
-				} else if (tx >= cux && tx <= maxX) {
-					this.ox = tx;
-				} else if (tx < cux) {
-					this.ox = cux;
-				} else if (tx > maxX) {
-					this.ox = maxX;
-				}
-
-				if (this.sh * scale < this.h) {
-					this.oy = this.h / 2;
-				} else if (ty >= cuy && ty <= maxY) {
-					this.oy = ty;
-				} else if (ty <= cuy) {
-					this.oy = cuy;
-				} else if (ty >= maxY) {
-					this.oy = maxY;
-				}
-
-				this.px = (cux - this.ox) / this.scale;
-				this.py = (cuy - this.oy) / this.scale;
-
-				return this;
-			}
-
-			/**
-	   * @description 移动
-	   * @param offsetX x偏移
-	   * @param offsetY y偏移
-	   */
-
-		}, {
-			key: 'moving',
-			value: function moving(offsetX, offsetY) {
-				offsetX = this.ratio * offsetX;
-				offsetY = this.ratio * offsetY;
-
-				if (this.offCanvas == null) {
-					return false;
-				}
-
-				var curX = this.px * this.scale + this.ox + offsetX;
-				var curY = this.py * this.scale + this.oy + offsetY;
-
-				var curMaxY = curY + this.sh * this.scale;
-				var curMaxX = curX + this.sw * this.scale;
-
-				var MaxX = this.w - this.sw * this.scale;
-				var MaxY = this.h - this.sh * this.scale;
-
-				// 5是用来做垂直滑动,可能带动的横向滑动的容错处理
-				if (curX >= 0 && offsetX > 5 || curX <= MaxX && offsetX < -5 || this.scale <= 1) {
-					return false;
-				}
-
-				if (curY < 0 || curMaxY > this.h) {
-					if (curY <= 0 && curY >= MaxY || curY < MaxY && offsetY > 0 || curY > 0 && offsetY < 0) {
-						this.oy += offsetY;
-					}
-				}
-
-				if (curX < 0 || curMaxX > this.w) {
-					if (curX <= 0 && curX >= MaxX || curX < MaxX && offsetX > 0 || curX > 0 && offsetX < 0) {
-						this.ox += offsetX;
-					}
-				}
-
-				this._draw();
-
-				return true;
-			}
-
-			/**
-	   * @description 绘制
-	   * @param imgObj
-	   * @return {PreViewImg}
-	   */
-
-		}, {
-			key: '_draw',
-			value: function _draw(imgObj) {
-				var ctx = this.ctx;
-
-				if (imgObj != undefined) {
-					this.offCanvas = _util2.default.getOffCanvas(imgObj, this.sw, this.sw);
-				}
-
-				ctx.clearRect(0, 0, this.w, this.h);
-				ctx.save();
-				ctx.translate(this.ox, this.oy);
-				ctx.scale(this.scale, this.scale);
-				ctx.drawImage(this.offCanvas, this.px, this.py, this.sw, this.sh);
-				ctx.restore();
-
-				return this;
-			}
-		}]);
-
-		return PreViewImg;
-	}();
-
-	exports.default = PreViewImg;
+	module.exports = PreViewImg;
 
 /***/ },
-/* 6 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*! Hammer.JS - v2.0.7 - 2016-04-22
@@ -4215,354 +4472,6 @@
 	}
 
 	})(window, document, 'Hammer');
-
-
-/***/ },
-/* 7 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-
-	// load the styles
-	var content = __webpack_require__(8);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(10)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(true) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept(8, function() {
-				var newContent = __webpack_require__(8);
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(9)();
-	// imports
-
-
-	// module
-	exports.push([module.id, "#pv-stage {\n  position: absolute;\n  left: 0;\n  top: 0;\n  overflow: hidden;\n  height: 100vh;\n  width: 100vw;\n  background: black; }\n\n.pv-panel {\n  position: absolute;\n  left: 0;\n  top: 0;\n  margin: 0;\n  padding: 0;\n  min-width: 100vw;\n  height: 100%;\n  list-style: none;\n  -webkit-transition: all 200ms ease;\n  -moz-transition: all 200ms ease;\n  -ms-transition: all 200ms ease;\n  transition: all 200ms ease; }\n  .pv-panel li {\n    float: left;\n    width: 100vw; }\n  .pv-panel canvas {\n    width: 100vw; }\n\n.pv-show-box {\n  position: absolute;\n  left: 0;\n  bottom: 0;\n  width: 100%; }\n\n.pv-show-page {\n  position: absolute;\n  left: 50%;\n  bottom: 30px;\n  -webkit-transform: translateX(-50);\n  -moz-transform: translateX(-50);\n  -ms-transform: translateX(-50);\n  -o-transform: translateX(-50);\n  transform: translateX(-50);\n  line-height: 1em;\n  color: #7b7b7b; }\n", ""]);
-
-	// exports
-
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	// css base code, injected by the css-loader
-	module.exports = function() {
-		var list = [];
-
-		// return the list of modules as css string
-		list.toString = function toString() {
-			var result = [];
-			for(var i = 0; i < this.length; i++) {
-				var item = this[i];
-				if(item[2]) {
-					result.push("@media " + item[2] + "{" + item[1] + "}");
-				} else {
-					result.push(item[1]);
-				}
-			}
-			return result.join("");
-		};
-
-		// import a list of modules into the list
-		list.i = function(modules, mediaQuery) {
-			if(typeof modules === "string")
-				modules = [[null, modules, ""]];
-			var alreadyImportedModules = {};
-			for(var i = 0; i < this.length; i++) {
-				var id = this[i][0];
-				if(typeof id === "number")
-					alreadyImportedModules[id] = true;
-			}
-			for(i = 0; i < modules.length; i++) {
-				var item = modules[i];
-				// skip already imported module
-				// this implementation is not 100% perfect for weird media query combinations
-				//  when a module is imported multiple times with different media queries.
-				//  I hope this will never occur (Hey this way we have smaller bundles)
-				if(typeof item[0] !== "number" || !alreadyImportedModules[item[0]]) {
-					if(mediaQuery && !item[2]) {
-						item[2] = mediaQuery;
-					} else if(mediaQuery) {
-						item[2] = "(" + item[2] + ") and (" + mediaQuery + ")";
-					}
-					list.push(item);
-				}
-			}
-		};
-		return list;
-	};
-
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*
-		MIT License http://www.opensource.org/licenses/mit-license.php
-		Author Tobias Koppers @sokra
-	*/
-	var stylesInDom = {},
-		memoize = function(fn) {
-			var memo;
-			return function () {
-				if (typeof memo === "undefined") memo = fn.apply(this, arguments);
-				return memo;
-			};
-		},
-		isOldIE = memoize(function() {
-			return /msie [6-9]\b/.test(window.navigator.userAgent.toLowerCase());
-		}),
-		getHeadElement = memoize(function () {
-			return document.head || document.getElementsByTagName("head")[0];
-		}),
-		singletonElement = null,
-		singletonCounter = 0,
-		styleElementsInsertedAtTop = [];
-
-	module.exports = function(list, options) {
-		if(false) {
-			if(typeof document !== "object") throw new Error("The style-loader cannot be used in a non-browser environment");
-		}
-
-		options = options || {};
-		// Force single-tag solution on IE6-9, which has a hard limit on the # of <style>
-		// tags it will allow on a page
-		if (typeof options.singleton === "undefined") options.singleton = isOldIE();
-
-		// By default, add <style> tags to the bottom of <head>.
-		if (typeof options.insertAt === "undefined") options.insertAt = "bottom";
-
-		var styles = listToStyles(list);
-		addStylesToDom(styles, options);
-
-		return function update(newList) {
-			var mayRemove = [];
-			for(var i = 0; i < styles.length; i++) {
-				var item = styles[i];
-				var domStyle = stylesInDom[item.id];
-				domStyle.refs--;
-				mayRemove.push(domStyle);
-			}
-			if(newList) {
-				var newStyles = listToStyles(newList);
-				addStylesToDom(newStyles, options);
-			}
-			for(var i = 0; i < mayRemove.length; i++) {
-				var domStyle = mayRemove[i];
-				if(domStyle.refs === 0) {
-					for(var j = 0; j < domStyle.parts.length; j++)
-						domStyle.parts[j]();
-					delete stylesInDom[domStyle.id];
-				}
-			}
-		};
-	}
-
-	function addStylesToDom(styles, options) {
-		for(var i = 0; i < styles.length; i++) {
-			var item = styles[i];
-			var domStyle = stylesInDom[item.id];
-			if(domStyle) {
-				domStyle.refs++;
-				for(var j = 0; j < domStyle.parts.length; j++) {
-					domStyle.parts[j](item.parts[j]);
-				}
-				for(; j < item.parts.length; j++) {
-					domStyle.parts.push(addStyle(item.parts[j], options));
-				}
-			} else {
-				var parts = [];
-				for(var j = 0; j < item.parts.length; j++) {
-					parts.push(addStyle(item.parts[j], options));
-				}
-				stylesInDom[item.id] = {id: item.id, refs: 1, parts: parts};
-			}
-		}
-	}
-
-	function listToStyles(list) {
-		var styles = [];
-		var newStyles = {};
-		for(var i = 0; i < list.length; i++) {
-			var item = list[i];
-			var id = item[0];
-			var css = item[1];
-			var media = item[2];
-			var sourceMap = item[3];
-			var part = {css: css, media: media, sourceMap: sourceMap};
-			if(!newStyles[id])
-				styles.push(newStyles[id] = {id: id, parts: [part]});
-			else
-				newStyles[id].parts.push(part);
-		}
-		return styles;
-	}
-
-	function insertStyleElement(options, styleElement) {
-		var head = getHeadElement();
-		var lastStyleElementInsertedAtTop = styleElementsInsertedAtTop[styleElementsInsertedAtTop.length - 1];
-		if (options.insertAt === "top") {
-			if(!lastStyleElementInsertedAtTop) {
-				head.insertBefore(styleElement, head.firstChild);
-			} else if(lastStyleElementInsertedAtTop.nextSibling) {
-				head.insertBefore(styleElement, lastStyleElementInsertedAtTop.nextSibling);
-			} else {
-				head.appendChild(styleElement);
-			}
-			styleElementsInsertedAtTop.push(styleElement);
-		} else if (options.insertAt === "bottom") {
-			head.appendChild(styleElement);
-		} else {
-			throw new Error("Invalid value for parameter 'insertAt'. Must be 'top' or 'bottom'.");
-		}
-	}
-
-	function removeStyleElement(styleElement) {
-		styleElement.parentNode.removeChild(styleElement);
-		var idx = styleElementsInsertedAtTop.indexOf(styleElement);
-		if(idx >= 0) {
-			styleElementsInsertedAtTop.splice(idx, 1);
-		}
-	}
-
-	function createStyleElement(options) {
-		var styleElement = document.createElement("style");
-		styleElement.type = "text/css";
-		insertStyleElement(options, styleElement);
-		return styleElement;
-	}
-
-	function createLinkElement(options) {
-		var linkElement = document.createElement("link");
-		linkElement.rel = "stylesheet";
-		insertStyleElement(options, linkElement);
-		return linkElement;
-	}
-
-	function addStyle(obj, options) {
-		var styleElement, update, remove;
-
-		if (options.singleton) {
-			var styleIndex = singletonCounter++;
-			styleElement = singletonElement || (singletonElement = createStyleElement(options));
-			update = applyToSingletonTag.bind(null, styleElement, styleIndex, false);
-			remove = applyToSingletonTag.bind(null, styleElement, styleIndex, true);
-		} else if(obj.sourceMap &&
-			typeof URL === "function" &&
-			typeof URL.createObjectURL === "function" &&
-			typeof URL.revokeObjectURL === "function" &&
-			typeof Blob === "function" &&
-			typeof btoa === "function") {
-			styleElement = createLinkElement(options);
-			update = updateLink.bind(null, styleElement);
-			remove = function() {
-				removeStyleElement(styleElement);
-				if(styleElement.href)
-					URL.revokeObjectURL(styleElement.href);
-			};
-		} else {
-			styleElement = createStyleElement(options);
-			update = applyToTag.bind(null, styleElement);
-			remove = function() {
-				removeStyleElement(styleElement);
-			};
-		}
-
-		update(obj);
-
-		return function updateStyle(newObj) {
-			if(newObj) {
-				if(newObj.css === obj.css && newObj.media === obj.media && newObj.sourceMap === obj.sourceMap)
-					return;
-				update(obj = newObj);
-			} else {
-				remove();
-			}
-		};
-	}
-
-	var replaceText = (function () {
-		var textStore = [];
-
-		return function (index, replacement) {
-			textStore[index] = replacement;
-			return textStore.filter(Boolean).join('\n');
-		};
-	})();
-
-	function applyToSingletonTag(styleElement, index, remove, obj) {
-		var css = remove ? "" : obj.css;
-
-		if (styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = replaceText(index, css);
-		} else {
-			var cssNode = document.createTextNode(css);
-			var childNodes = styleElement.childNodes;
-			if (childNodes[index]) styleElement.removeChild(childNodes[index]);
-			if (childNodes.length) {
-				styleElement.insertBefore(cssNode, childNodes[index]);
-			} else {
-				styleElement.appendChild(cssNode);
-			}
-		}
-	}
-
-	function applyToTag(styleElement, obj) {
-		var css = obj.css;
-		var media = obj.media;
-
-		if(media) {
-			styleElement.setAttribute("media", media)
-		}
-
-		if(styleElement.styleSheet) {
-			styleElement.styleSheet.cssText = css;
-		} else {
-			while(styleElement.firstChild) {
-				styleElement.removeChild(styleElement.firstChild);
-			}
-			styleElement.appendChild(document.createTextNode(css));
-		}
-	}
-
-	function updateLink(linkElement, obj) {
-		var css = obj.css;
-		var sourceMap = obj.sourceMap;
-
-		if(sourceMap) {
-			// http://stackoverflow.com/a/26603875
-			css += "\n/*# sourceMappingURL=data:application/json;base64," + btoa(unescape(encodeURIComponent(JSON.stringify(sourceMap)))) + " */";
-		}
-
-		var blob = new Blob([css], { type: "text/css" });
-
-		var oldSrc = linkElement.href;
-
-		linkElement.href = URL.createObjectURL(blob);
-
-		if(oldSrc)
-			URL.revokeObjectURL(oldSrc);
-	}
 
 
 /***/ }

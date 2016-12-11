@@ -16,7 +16,7 @@ var production = (process.env.NODE_ENV === 'production');
 
 module.exports = {
 	entry: {
-		index: path.resolve(SRC_PATH, '../index.js')
+		index: path.resolve(TEST_PATH, './js/index.js')
 	},
 
 	output: {
@@ -68,12 +68,12 @@ module.exports = {
 	},
 
 	plugins: [
-		// new HtmlWebpackPlugin({
-		// 	filename: path.resolve(DIST_PATH, 'index.html'),
-		// 	template: path.resolve(TEST_PATH, 'page/index.html'),
-		// 	chunks: ['index'],
-		// 	inject: 'body'
-		// }),
+		new HtmlWebpackPlugin({
+			filename: path.resolve(DIST_PATH, 'index.html'),
+			template: path.resolve(TEST_PATH, 'page/index.html'),
+			chunks: ['index'],
+			inject: 'body'
+		}),
 		new webpack.HotModuleReplacementPlugin()
 	]
 };

@@ -3,22 +3,22 @@
  * @author wulunyi
  */
 'use strict';
+require('src/animation');
+require('src/css/pre-view.scss');
 
-import util from 'src/util';
-import 'src/animation';
-import PreViewWrap from 'src/PreViewWrap';
-import 'src/css/pre-view.scss';
-import Hammer from 'hammerjs';
+var util = require('src/util');
+var PreViewPage = require('src/pre-view-page');
+var Hammer = require('hammerjs');
 
-export  default (function () {
-	let _PRE_PANEL = null;
-	let _tempChild = null;
-	let _timer = null;
-	let _deltaX = null;
-	let _currentIndex = 0;
-	let _MAX_INDEX = 0;
-	let _preList = [];// 预览
-	let _PAGE_DOM = {};// 翻页dom元素
+module.exports = (function () {
+	var _PRE_PANEL = null;
+	var _tempChild = null;
+	var _timer = null;
+	var _deltaX = null;
+	var _currentIndex = 0;
+	var _MAX_INDEX = 0;
+	var _preList = [];// 预览
+	var _PAGE_DOM = {};// 翻页dom元素
 
 	const _SIZE = {
 		width: window.innerWidth,
@@ -49,7 +49,7 @@ export  default (function () {
 		document.body.appendChild(_PRE_PANEL);
 	}
 
-	let _eventHandler = {
+	var _eventHandler = {
 		dom: null,
 		tap: function handleTap(ev) {
 			clearTimeout(_timer);
@@ -71,14 +71,14 @@ export  default (function () {
 		pan: function handlePan(ev) {
 			clearTimeout(_timer);
 
-			let deltaX = ev.deltaX;
+			var deltaX = ev.deltaX;
 
 			if (_deltaX == null) {
 				_deltaX = deltaX;
 			}
 
-			let deltaDistance = deltaX - _deltaX;
-			let offSetDistance = deltaDistance + (_currentIndex - _MAX_INDEX) * _SIZE.width;
+			var deltaDistance = deltaX - _deltaX;
+			var offSetDistance = deltaDistance + (_currentIndex - _MAX_INDEX) * _SIZE.width;
 
 			if (_eventHandler.dom) {
 				_eventHandler.dom.style.transition = "none";
@@ -88,15 +88,15 @@ export  default (function () {
 			}
 		},
 		panend: function handlePanEnd(ev) {
-			let maxDeltax = _SIZE.width * 0.1;
-			let deltaX = ev.deltaX - _deltaX;
+			var maxDeltax = _SIZE.width * 0.1;
+			var deltaX = ev.deltaX - _deltaX;
 
 			_deltaX = null;
 
 			_eventHandler.dom.style.transition = "all 200ms ease";// 开启动画
 			_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease";// 开启动画
 
-			let tempIndex = _currentIndex;
+			var tempIndex = _currentIndex;
 
 			if (deltaX > maxDeltax && _currentIndex < _MAX_INDEX) {
 				_currentIndex++;
@@ -105,7 +105,7 @@ export  default (function () {
 			}
 			_setPage();
 
-			let offsetDistance = _SIZE.width * (_currentIndex - _MAX_INDEX);
+			var offsetDistance = _SIZE.width * (_currentIndex - _MAX_INDEX);
 
 			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
 			_eventHandler.dom.style['-webkit-transform'] = "translate(" + offsetDistance + 'px)';
@@ -117,16 +117,16 @@ export  default (function () {
 	};
 
 	function _openEvent(dom) {
-		let hammer = new Hammer(dom);
+		var hammer = new Hammer(dom);
 		_eventHandler.dom = dom;
 
-		for (let event in _eventHandler) {
+		for (var event in _eventHandler) {
 			hammer.on(event, _eventHandler[event]);
 		}
 	}
 
 	function _render(srcArr) {
-		let dom = util.createDom('ul', {
+		var dom = util.createDom('ul', {
 			className: 'pv-panel'
 		});
 
@@ -134,7 +134,7 @@ export  default (function () {
 		_openEvent(dom);
 
 		dom.style.width = srcArr.length * _SIZE.width + 'px';
-		let offsetDistance = (_currentIndex - _MAX_INDEX) * _SIZE.width;
+		var offsetDistance = (_currentIndex - _MAX_INDEX) * _SIZE.width;
 
 		dom.style.transform = "translate(" + offsetDistance + 'px)';
 		dom.style['-webkit-transform'] = "translate(" + offsetDistance + 'px)';
@@ -159,9 +159,9 @@ export  default (function () {
 	}
 
 	function _createPreView() {
-		let src = [].shift.call(arguments);
-		let innerDom = util.createDom('li');
-		let preViewWrap = new PreViewWrap(_SIZE, src);
+		var src = [].shift.call(arguments);
+		var innerDom = util.createDom('li');
+		var preViewWrap = new PreViewPage(_SIZE, src);
 
 		_preList.push(preViewWrap);
 		innerDom.appendChild(preViewWrap.canvas);
