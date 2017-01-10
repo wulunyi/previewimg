@@ -1,10 +1,14 @@
 {
   "name": "previewimg",
-  "version": "1.0.2",
+  "version": "1.0.5",
   "description": "",
   "main": "lib/index.bundle.js",
   "directories": {
     "test": "test"
+  },
+  "repository": {
+	 "type": "git",
+	 "url": "git@github.com:wulunyi/components.git"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -35,6 +39,7 @@
     "chai": "^3.5.0",
     "jsdom": "^9.8.3",
     "jsdom-global": "^2.1.0",
-    "mocha-jsdom": "^1.1.0"
+    "mocha-jsdom": "^1.1.0",
+    "previewimg": "^1.0.4"
   }
 }

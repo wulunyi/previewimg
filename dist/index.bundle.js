@@ -63,7 +63,7 @@
 /******/ 	}
 
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "cd99b8ad48d7e0176dc1"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9f258da5a7458f93fb46"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 
@@ -644,7 +644,6 @@
 	 * @author wulunyi
 	 */
 	'use strict';
-
 	__webpack_require__(3);
 	__webpack_require__(4);
 
@@ -652,17 +651,17 @@
 	var PreViewPage = __webpack_require__(6);
 	var Hammer = __webpack_require__(8);
 
-	module.exports = function () {
+	module.exports = (function () {
 		var _PRE_PANEL = null;
 		var _tempChild = null;
 		var _timer = null;
 		var _deltaX = null;
 		var _currentIndex = 0;
 		var _MAX_INDEX = 0;
-		var _preList = []; // 预览
-		var _PAGE_DOM = {}; // 翻页dom元素
+		var _preList = [];// 预览
+		var _PAGE_DOM = {};// 翻页dom元素
 
-		var _SIZE = {
+		const _SIZE = {
 			width: window.innerWidth,
 			height: window.innerHeight
 		};
@@ -697,7 +696,7 @@
 				clearTimeout(_timer);
 
 				// 预测用户是否要做双击操作
-				_timer = setTimeout(function () {
+				_timer = setTimeout(()=> {
 					_hide();
 				}, 200);
 
@@ -735,8 +734,8 @@
 
 				_deltaX = null;
 
-				_eventHandler.dom.style.transition = "all 200ms ease"; // 开启动画
-				_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease"; // 开启动画
+				_eventHandler.dom.style.transition = "all 200ms ease";// 开启动画
+				_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease";// 开启动画
 
 				var tempIndex = _currentIndex;
 
@@ -783,7 +782,7 @@
 			dom.style['-moz-transition'] = "translate(" + offsetDistance + 'px)';
 			dom.style['-ms-transition'] = "translate(" + offsetDistance + 'px)';
 
-			srcArr.forEach(function (src) {
+			srcArr.forEach((src)=> {
 				dom.appendChild(_createPreView(src));
 			});
 
@@ -797,7 +796,7 @@
 		}
 
 		function _setPage() {
-			_PAGE_DOM.innerHTML = _MAX_INDEX + 1 + '/' + (_currentIndex + 1);
+			_PAGE_DOM.innerHTML = (_MAX_INDEX + 1) + '/' + (_currentIndex + 1);
 		}
 
 		function _createPreView() {
@@ -856,8 +855,8 @@
 			show: _show,
 			hide: _hide,
 			panel: _PRE_PANEL
-		};
-	}();
+		}
+	})();
 
 /***/ },
 /* 3 */
@@ -874,19 +873,22 @@
 
 	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
 	        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	        window.cancelAnimationFrame =
+	            window[vendors[x] + 'CancelAnimationFrame'] ||
+	            window[vendors[x] + 'CancelRequestAnimationFrame'];
 	    }
 
-	    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
-	        var currTime = new Date().getTime();
-	        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	        var id = window.setTimeout(function () {
-	            callback(currTime + timeToCall);
-	        }, timeToCall);
+	    if (!window.requestAnimationFrame)
+	        window.requestAnimationFrame = function (callback, element) {
+	            var currTime = new Date().getTime();
+	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	            var id = window.setTimeout(function () {
+	                callback(currTime + timeToCall);
+	            }, timeToCall);
 
-	        lastTime = currTime + timeToCall;
-	        return id;
-	    };
+	            lastTime = currTime + timeToCall;
+	            return id;
+	        };
 
 	    if (!window.cancelAnimationFrame) {
 	        window.cancelAnimationFrame = function (id) {
@@ -961,6 +963,7 @@
 		document.getElementsByTagName('head')[0].appendChild(style);
 	})();
 
+
 /***/ },
 /* 5 */
 /***/ function(module, exports) {
@@ -970,18 +973,17 @@
 	 * @author wulunyi.
 	 */
 	'use strict';
-
 	var util = {
-		getOffCanvas: function () {
+		getOffCanvas:(function(){
 			var cache = {};
 			var _shift = Array.prototype.shift;
 
-			return function () {
+			return function (){
 				var img = _shift.call(arguments);
 				var w = _shift.call(arguments);
 				var h = _shift.call(arguments);
 
-				if (!cache[img.src]) {
+				if(!cache[img.src]){
 					var canvas = document.createElement('canvas');
 					var ctx = canvas.getContext('2d');
 
@@ -994,31 +996,31 @@
 				}
 
 				return cache[img.src];
-			};
-		}(),
+			}
+		})(),
 
 		/**
-	  * @description 下载图片
-	  * @param src [string] 图片地址
-	  * @param cb [function] 回调函数
-	  */
-		getImg: function () {
+		 * @description 下载图片
+		 * @param src [string] 图片地址
+		 * @param cb [function] 回调函数
+		 */
+		getImg:(function () {
 			var _imgCache = {};
 			var _shift = Array.prototype.shift;
 
 			return function () {
 				var src = _shift.call(arguments),
-				    cb = _shift.call(arguments);
+					cb = _shift.call(arguments);
 
-				if (!_imgCache[src]) {
+				if(!_imgCache[src]){
 					var imgObj = document.createElement('img');
 
-					imgObj.addEventListener('load', function () {
+					imgObj.addEventListener('load', ()=> {
 						_imgCache[src] = imgObj;
 						cb && cb(imgObj);
 					});
 
-					imgObj.addEventListener('error', function () {
+					imgObj.addEventListener('error', ()=> {
 						console.log('-> 图片加载失败,请检查图片是否存在');
 					});
 
@@ -1026,23 +1028,23 @@
 				}
 
 				cb(_imgCache[src]);
-			};
-		}(),
+			}
+		})(),
 
-		getSize: function getSize(dom) {
+		getSize: function(dom) {
 			var boundData = dom.getBoundingClientRect();
 
 			return {
 				height: boundData.height,
 				width: boundData.width
-			};
+			}
 		},
 
-		toFixed: function toFixed(num) {
+		toFixed: function(num) {
 			return Math.floor(num * 100) / 100;
 		},
 
-		createDom: function createDom() {
+		createDom: function() {
 			var tagName = [].shift.call(arguments) || 'div';
 			var options = [].shift.call(arguments) || {};
 			var resultDom = document.createElement(tagName);
@@ -1056,6 +1058,7 @@
 	};
 
 	module.exports = util;
+
 
 /***/ },
 /* 6 */
@@ -1090,19 +1093,23 @@
 	PreViewPage.prototype._init = function () {
 		var hammer = this.hammer;
 
-		hammer.get('pinch').set({ enable: true });
-		hammer.get('doubletap').set({ posThreshold: 60 });
+		hammer.get('pinch').set({enable: true});
+		hammer.get('doubletap').set({posThreshold: 60});
 
-		hammer.on('doubletap', this._handleDoubleTap.bind(this)).on('pan', this._handlePan.bind(this)).on('panend', this._handlePanEnd.bind(this)).on('pinch', this._handlePinch.bind(this)).on('pinchend', this._handlePinchEnd.bind(this));
+		hammer.on('doubletap', this._handleDoubleTap.bind(this))
+			.on('pan', this._handlePan.bind(this))
+			.on('panend', this._handlePanEnd.bind(this))
+			.on('pinch', this._handlePinch.bind(this))
+			.on('pinchend', this._handlePinchEnd.bind(this));
 	};
 
-	PreViewPage.prototype._handleDoubleTap = function (ev) {
-		var touchPoint = ev.center; // 获取点击数据
+	PreViewPage.prototype._handleDoubleTap = function(ev) {
+		var touchPoint = ev.center;// 获取点击数据
 
 		this.preView.scaling(null, touchPoint.x, touchPoint.y);
 	};
 
-	PreViewPage.prototype._handlePinch = function (ev) {
+	PreViewPage.prototype._handlePinch = function(ev) {
 		var center = ev.center;
 
 		if (this.pinchPoint === null) {
@@ -1116,13 +1123,13 @@
 		return false;
 	};
 
-	PreViewPage.prototype._handlePinchEnd = function () {
+	PreViewPage.prototype._handlePinchEnd = function() {
 		//重置
 		this.scale = 1;
 		this.pinchPoint = null;
 	};
 
-	PreViewPage.prototype._handlePan = function (ev) {
+	PreViewPage.prototype._handlePan = function(ev) {
 		var panPoint = ev.center;
 		var lastPanPoint = this.panPoint || panPoint;
 
@@ -1142,7 +1149,7 @@
 		}
 	};
 
-	PreViewPage.prototype._handlePanEnd = function (ev) {
+	PreViewPage.prototype._handlePanEnd = function(ev) {
 		this.panPoint = null;
 
 		if (this.isMoving) {
@@ -1177,9 +1184,7 @@
 
 			// 解决三星等出现横屏后突然竖屏图像异常的问题
 			if (w > h) {
-				var _ref = [h, w];
-				w = _ref[0];
-				h = _ref[1];
+				[w, h] = [h, w];
 			}
 
 			// 面板容器宽高
@@ -1198,42 +1203,44 @@
 
 			// 可选参数
 			var defaultOptions = {
-				maxScale: 4, // 最大缩放边界
-				minScale: 1, // 最小缩放边界
+				maxScale: 4,// 最大缩放边界
+				minScale: 1,// 最小缩放边界
 				doubleTapScale: 2 // 双击缩放大小
 				//rotate: false,
 			};
 
 			this.options = options || defaultOptions;
 
-			this.sw = 0; // 绘制宽高
-			this.sh = 0; // 绘制宽高
+			this.sw = 0;// 绘制宽高
+			this.sh = 0;// 绘制宽高
 
-			this.ox = this.w / 2; // 绘制原点
-			this.oy = this.h / 2; // 绘制原点
+			this.ox = this.w / 2;// 绘制原点
+			this.oy = this.h / 2;// 绘制原点
 
-			this.px = 0; // 绘制开始坐标
-			this.py = 0; // 绘制开始坐标
+			this.px = 0;// 绘制开始坐标
+			this.py = 0;// 绘制开始坐标
 
-			this.scale = 1; // 绘制缩放比
+			this.scale = 1;// 绘制缩放比
 
-			this.timer = null; // 动画返回锚点
+			this.timer = null;// 动画返回锚点
 
 			this.cache = {};
 
-			this._init(src); // 初始化
+			this._init(src);// 初始化
 		} else {
 			console.warn('参数错误,需要canvas dom');
 		}
 	}
 
 	PreViewImg.prototype._init = function (src) {
-		this._loading('start'); // 开启加载中动画...
+		this._loading('start');// 开启加载中动画...
 
 		var self = this;
 
-		self._pullImg(src, function (imgObj) {
-			self._loading('end')._getInitData(imgObj)._draw(imgObj);
+		self._pullImg(src, (imgObj)=> {
+			self._loading('end')
+				._getInitData(imgObj)
+				._draw(imgObj);
 		});
 	};
 
@@ -1263,7 +1270,7 @@
 		var dw = this.w;
 		var dh = this.h;
 
-		var ratio = dw / sw; // 图片绘制到面板本身的缩放比
+		var ratio = dw / sw;// 图片绘制到面板本身的缩放比
 
 		// 已宽为准进行缩放后图片在面板的高度不超过面板本身的高度
 		if (ratio * sh <= dh) {
@@ -1287,7 +1294,7 @@
 		var w = self.w;
 		var h = self.h;
 		var ctx = self.ctx;
-		var count = 0; // 计数
+		var count = 0;// 计数
 
 		cancelAnimationFrame(this.timer);
 
@@ -1298,13 +1305,13 @@
 		var base = self.ratio;
 
 		/**
-	  * @description 加载动画
-	  */
+		 * @description 加载动画
+		 */
 		function loadingAnimation() {
 			ctx.clearRect(0, 0, w, h);
 			ctx.save();
 			ctx.translate(w / 2, h / 2);
-			ctx.rotate(base / 2 * 5 * count * Math.PI / 180);
+			ctx.rotate((base / 2) * 5 * count * Math.PI / 180);
 
 			for (var i = 0; i < 9; i++) {
 				ctx.save();
@@ -1333,7 +1340,7 @@
 		return this;
 	};
 
-	PreViewImg.prototype._pullImg = function () {
+	PreViewImg.prototype._pullImg = function() {
 		var cache = this.cache;
 		var src = [].shift.call(arguments) || '';
 		var cb = [].shift.call(arguments);
@@ -1343,13 +1350,13 @@
 		} else {
 			var imgObj = document.createElement('img');
 
-			imgObj.addEventListener('load', function () {
+			imgObj.addEventListener('load', ()=> {
 				cache[src] = imgObj;
 
 				cb && cb(imgObj);
 			});
 
-			imgObj.addEventListener('error', function () {
+			imgObj.addEventListener('error', ()=> {
 				console.log('-> 图片加载失败,请检查图片是否存在');
 			});
 
@@ -1357,7 +1364,7 @@
 		}
 	};
 
-	PreViewImg.prototype.animation = function (toScale) {
+	PreViewImg.prototype.animation = function(toScale) {
 		cancelAnimationFrame(this.timer);
 
 		var times = 10;
@@ -1367,8 +1374,8 @@
 		var self = this;
 
 		/**
-	  * @description 动画
-	  */
+		 * @description 动画
+		 */
 		function innerAnimate() {
 			if (count <= times) {
 				var ratio = base + count * speed;
@@ -1386,7 +1393,7 @@
 		innerAnimate();
 	};
 
-	PreViewImg.prototype.scaling = function (scale, tx, ty) {
+	PreViewImg.prototype.scaling = function(scale, tx, ty) {
 		tx = this.ratio * tx;
 		ty = this.ratio * ty;
 
@@ -1414,8 +1421,8 @@
 		return this;
 	};
 
-	PreViewImg.prototype.reset = function () {
-		if (this.scale !== 1) {
+	PreViewImg.prototype.reset = function(){
+		if(this.scale !== 1){
 			this._getScaleSmallerPoint();
 			var toScale = 1;
 
@@ -1423,7 +1430,7 @@
 		}
 	};
 
-	PreViewImg.prototype.scaled = function (scale, x, y) {
+	PreViewImg.prototype.scaled = function(scale, x, y) {
 		x = this.ratio * x;
 		y = this.ratio * y;
 
@@ -1438,6 +1445,7 @@
 
 				this._getBiggerOriginPoint(x, y, toScale);
 			}
+
 		}
 
 		if (toScale > 4) {
@@ -1468,7 +1476,7 @@
 		return this;
 	};
 
-	PreViewImg.prototype._getBiggerOriginPoint = function (tx, ty, scale) {
+	PreViewImg.prototype._getBiggerOriginPoint = function(tx, ty, scale) {
 		var cux = this.px * this.scale + this.ox;
 		var cuy = this.py * this.scale + this.oy;
 
@@ -1501,7 +1509,7 @@
 		return this;
 	};
 
-	PreViewImg.prototype.moving = function (offsetX, offsetY) {
+	PreViewImg.prototype.moving = function(offsetX, offsetY) {
 		offsetX = this.ratio * offsetX;
 		offsetY = this.ratio * offsetY;
 
@@ -1519,18 +1527,18 @@
 		var MaxY = this.h - this.sh * this.scale;
 
 		// 5是用来做垂直滑动,可能带动的横向滑动的容错处理
-		if (curX >= 0 && offsetX > 5 || curX <= MaxX && offsetX < -5 || this.scale <= 1) {
+		if ((curX >= 0 && offsetX > 5) || (curX <= MaxX && offsetX < -5) || this.scale <= 1) {
 			return false;
 		}
 
 		if (curY < 0 || curMaxY > this.h) {
-			if (curY <= 0 && curY >= MaxY || curY < MaxY && offsetY > 0 || curY > 0 && offsetY < 0) {
+			if ((curY <= 0 && curY >= MaxY) || (curY < MaxY && offsetY > 0) || (curY > 0 && offsetY < 0)) {
 				this.oy += offsetY;
 			}
 		}
 
 		if (curX < 0 || curMaxX > this.w) {
-			if (curX <= 0 && curX >= MaxX || curX < MaxX && offsetX > 0 || curX > 0 && offsetX < 0) {
+			if ((curX <= 0 && curX >= MaxX) || (curX < MaxX && offsetX > 0) || (curX > 0 && offsetX < 0)) {
 				this.ox += offsetX;
 			}
 		}
@@ -1539,6 +1547,8 @@
 
 		return true;
 	};
+
+
 
 	module.exports = PreViewImg;
 
