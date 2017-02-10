@@ -1,6 +1,6 @@
 {
   "name": "previewimg",
-  "version": "1.0.5",
+  "version": "1.0.7",
   "description": "",
   "main": "lib/index.bundle.js",
   "directories": {
@@ -40,6 +40,7 @@
     "jsdom": "^9.8.3",
     "jsdom-global": "^2.1.0",
     "mocha-jsdom": "^1.1.0",
-    "previewimg": "^1.0.4"
+    "previewimg": "^1.0.4",
+	"hammerjs": "^2.0.8"
   }
 }
