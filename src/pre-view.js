@@ -3,6 +3,7 @@
  * @author wulunyi
  */
 'use strict';
+
 require('./animation');
 require('./style');
 
@@ -11,29 +12,38 @@ var PreViewPage = require('./pre-view-page');
 var Hammer = require('hammerjs');
 
 module.exports = (function () {
-	var _PRE_PANEL = null;
+	var _PRE_PANEL = null;// 预览面板
 	var _tempChild = null;
-	var _timer = null;
-	var _deltaX = null;
-	var _currentIndex = 0;
-	var _MAX_INDEX = 0;
-	var _preList = [];// 预览
+	var _timer = null;// 计时器
+	var _deltaX = null;// X偏移量
+	var _currentIndex = 0;// 当前下标
+	var _MAX_INDEX = 0;// 最大下标
+	var _preList = [];// 预览列表
 	var _PAGE_DOM = {};// 翻页dom元素
 
+	// 操作选项
+	var options = {
+		tapHide: true // 是否开启点击关闭
+	};
+
+	// 容器大小
 	const _SIZE = {
 		width: window.innerWidth,
 		height: window.innerHeight
 	};
 
+	// 如果不存在则构建
 	if (!_PRE_PANEL) {
 		_PRE_PANEL = util.createDom('div', {
 			id: 'pv-stage'
 		});
 
+		// 页码容器
 		var pageWrapDom = util.createDom('div', {
 			className: 'pv-show-box'
 		});
 
+		// 页码
 		var pageItemDom = util.createDom('span', {
 			className: 'pv-show-page'
 		});
@@ -44,6 +54,7 @@ module.exports = (function () {
 
 		_PAGE_DOM = pageItemDom;
 
+		// 隐藏
 		_PRE_PANEL.style.display = 'none';
 
 		document.body.appendChild(_PRE_PANEL);
@@ -56,8 +67,10 @@ module.exports = (function () {
 
 			// 预测用户是否要做双击操作
 			_timer = setTimeout(()=> {
-				_hide();
-			}, 200);
+				if (options.tapHide) {
+					_hide();
+				}
+			}, 300);
 
 			ev.srcEvent.preventDefault();
 			return false;
@@ -82,9 +95,9 @@ module.exports = (function () {
 
 			if (_eventHandler.dom) {
 				_eventHandler.dom.style.transition = "none";
-				_eventHandler.dom.style['-webkit-transition'] = "none";
+				_eventHandler.dom.style.webkitTransition = "none";
 				_eventHandler.dom.style.transform = "translate(" + offSetDistance + 'px)';
-				_eventHandler.dom.style['-webkit-transform'] = "translate(" + offSetDistance + 'px)';
+				_eventHandler.dom.style.webkitTransform = "translate(" + offSetDistance + 'px)';
 			}
 		},
 		panend: function handlePanEnd(ev) {
@@ -93,8 +106,9 @@ module.exports = (function () {
 
 			_deltaX = null;
 
-			_eventHandler.dom.style.transition = "all 200ms ease";// 开启动画
-			_eventHandler.dom.style['-webkit-transition'] = "all 200ms ease";// 开启动画
+			// 开启动画
+			_eventHandler.dom.style.transition = "all 200ms ease";
+			_eventHandler.dom.style.webkitTransition = "all 200ms ease";
 
 			var tempIndex = _currentIndex;
 
@@ -103,12 +117,14 @@ module.exports = (function () {
 			} else if (deltaX < -maxDeltax && _currentIndex > 0) {
 				_currentIndex--;
 			}
+
 			_setPage();
 
 			var offsetDistance = _SIZE.width * (_currentIndex - _MAX_INDEX);
 
+			// 设置偏移
 			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
-			_eventHandler.dom.style['-webkit-transform'] = "translate(" + offsetDistance + 'px)';
+			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
 
 			if (tempIndex !== _currentIndex) {
 				_preList[_MAX_INDEX - tempIndex].reset();
@@ -118,6 +134,7 @@ module.exports = (function () {
 
 	function _openEvent(dom) {
 		var hammer = new Hammer(dom);
+		hammer.get('doubletap').set({posThreshold: 60});
 		_eventHandler.dom = dom;
 
 		for (var event in _eventHandler) {
@@ -134,6 +151,7 @@ module.exports = (function () {
 		_openEvent(dom);
 
 		dom.style.width = srcArr.length * _SIZE.width + 'px';
+
 		var offsetDistance = (_currentIndex - _MAX_INDEX) * _SIZE.width;
 
 		dom.style.transform = "translate(" + offsetDistance + 'px)';
@@ -155,7 +173,7 @@ module.exports = (function () {
 	}
 
 	function _setPage() {
-		_PAGE_DOM.innerHTML = (_MAX_INDEX + 1) + '/' + (_currentIndex + 1);
+		_PAGE_DOM.innerHTML = (_currentIndex + 1) + '/' + (_MAX_INDEX + 1);
 	}
 
 	function _createPreView() {
@@ -192,7 +210,7 @@ module.exports = (function () {
 			index = srcArr.length - 1;
 		}
 
-		srcArr = srcArr.reverse();
+		// srcArr = srcArr.reverse();
 
 		_currentIndex = index;
 		_MAX_INDEX = srcArr.length - 1;
@@ -206,11 +224,18 @@ module.exports = (function () {
 		};
 	}
 
+	function _set(obj) {
+		for (var key in obj) {
+			options[key] = obj[key];
+		}
+	}
+
 	function _hide() {
 		_PRE_PANEL.style.display = 'none';
 	}
 
 	return {
+		set: _set,
 		show: _show,
 		hide: _hide,
 		panel: _PRE_PANEL
