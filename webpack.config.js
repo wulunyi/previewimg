@@ -16,12 +16,12 @@ var production = (process.env.NODE_ENV === 'production');
 
 module.exports = {
 	entry: {
-		index: path.resolve(TEST_PATH, './js/index.js')
+		index: path.resolve(__dirname, './index.js')
 	},
 
 	output: {
 		'filename': '[name].bundle.js',
-		'path': 'dist',
+		'path': 'lib',
 		'publicPath': '/preViewImg/dist'
 	},
 
