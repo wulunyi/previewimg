@@ -132,6 +132,7 @@ module.exports = (function () {
 
 			if (tempIndex !== _currentIndex) {
 				_preList[_currentIndex]._bindEvent();
+				_preList[_currentIndex].start();
 				_preList[tempIndex].reset();
 			}
 		}
@@ -169,15 +170,11 @@ module.exports = (function () {
 			dom.appendChild(_createPreView(src));
 		});
 
-		// 如果有缓存面板
-		if (_tempChild) {
-			_PRE_PANEL.removeChild(_tempChild);
-		}
-
 		_PRE_PANEL.appendChild(dom);
 
 		// 绑定事件
 		_preList[_currentIndex]._bindEvent();
+		_preList[_currentIndex].start();
 
 		// 缓存面板
 		_tempChild = dom;
@@ -251,6 +248,11 @@ module.exports = (function () {
 
 	function _hide() {
 		_PRE_PANEL.style.display = 'none';
+		// 清除缓存
+		if (_tempChild) {
+			_PRE_PANEL.removeChild(_tempChild);
+			_tempChild = null;
+		}
 	}
 
 	return {

@@ -25,6 +25,10 @@ PreViewPage.prototype.reset = function () {
 	this.preView.reset();
 };
 
+PreViewPage.prototype.start = function () {
+	this.preView._init();
+};
+
 PreViewPage.prototype._offEvent = function () {
 	var hammer = this.hammer;
 	hammer.off('doubletap', this._handleDoubleTap.bind(this))

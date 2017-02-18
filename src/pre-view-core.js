@@ -59,13 +59,23 @@ function PreViewImg(canvas, size, src, options) {
 
 		this.cache = {};
 
-		this._init(src);// 初始化
+		// this._init(src);// 初始化
+		this.src = src;
+		this.init = false;
 	} else {
 		console.warn('参数错误,需要canvas dom');
 	}
 }
 
-PreViewImg.prototype._init = function (src) {
+PreViewImg.prototype._init = function () {
+	if(this.init){
+		return;
+	}
+
+	this.init = true;
+
+	var src = this.src;
+
 	this._loading('start');// 开启加载中动画...
 
 	var self = this;
