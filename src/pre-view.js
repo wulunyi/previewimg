@@ -22,6 +22,10 @@ module.exports = (function () {
 	var _PAGE_DOM = {};// 翻页dom元素
 
 	// 操作选项
+	var defaultOptions = {
+		tapHide: true
+	};
+
 	var options = {
 		tapHide: true // 是否开启点击关闭
 	};
@@ -91,7 +95,7 @@ module.exports = (function () {
 			}
 
 			var deltaDistance = deltaX - _deltaX;
-			var offSetDistance = deltaDistance + (_currentIndex - _MAX_INDEX) * _SIZE.width;
+			var offSetDistance = deltaDistance + (-_currentIndex ) * _SIZE.width;
 
 			if (_eventHandler.dom) {
 				_eventHandler.dom.style.transition = "none";
@@ -112,22 +116,23 @@ module.exports = (function () {
 
 			var tempIndex = _currentIndex;
 
-			if (deltaX > maxDeltax && _currentIndex < _MAX_INDEX) {
+			if (deltaX < -maxDeltax  && _currentIndex < _MAX_INDEX) {
 				_currentIndex++;
-			} else if (deltaX < -maxDeltax && _currentIndex > 0) {
+			} else if (deltaX > maxDeltax && _currentIndex > 0) {
 				_currentIndex--;
 			}
 
 			_setPage();
 
-			var offsetDistance = _SIZE.width * (_currentIndex - _MAX_INDEX);
+			var offsetDistance = _SIZE.width * (-_currentIndex );
 
 			// 设置偏移
 			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
 			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
 
 			if (tempIndex !== _currentIndex) {
-				_preList[_MAX_INDEX - tempIndex].reset();
+				_preList[_currentIndex]._bindEvent();
+				_preList[tempIndex].reset();
 			}
 		}
 	};
@@ -150,25 +155,31 @@ module.exports = (function () {
 		// 开启各种监听
 		_openEvent(dom);
 
+		// 设置滚动内容面板width
 		dom.style.width = srcArr.length * _SIZE.width + 'px';
 
-		var offsetDistance = (_currentIndex - _MAX_INDEX) * _SIZE.width;
+		var offsetDistance = (-_currentIndex) * _SIZE.width;
 
-		dom.style.transform = "translate(" + offsetDistance + 'px)';
-		dom.style['-webkit-transform'] = "translate(" + offsetDistance + 'px)';
-		dom.style['-moz-transition'] = "translate(" + offsetDistance + 'px)';
-		dom.style['-ms-transition'] = "translate(" + offsetDistance + 'px)';
+		var property = "translate(" + offsetDistance + 'px)';
+
+		dom.style.transform = property;
+		dom.style.webkitTransform = property;
 
 		srcArr.forEach((src)=> {
 			dom.appendChild(_createPreView(src));
 		});
 
+		// 如果有缓存面板
 		if (_tempChild) {
 			_PRE_PANEL.removeChild(_tempChild);
 		}
 
 		_PRE_PANEL.appendChild(dom);
 
+		// 绑定事件
+		_preList[_currentIndex]._bindEvent();
+
+		// 缓存面板
 		_tempChild = dom;
 	}
 
@@ -194,9 +205,19 @@ module.exports = (function () {
 			return;
 		}
 
+		// 重置缓存列表
+		_preList = [];
+
 		// 获取参数
 		var srcArr = [].shift.call(arguments) || [];
 		var index = [].slice.call(arguments)[0] || 0;
+		var options = [].slice.call(arguments)[1];
+
+		if(options && typeof options === 'object'){
+			_set(options);
+		}else {
+			_set(defaultOptions);
+		}
 
 		if (!Array.isArray(srcArr)) {
 			srcArr = [srcArr];
@@ -209,8 +230,6 @@ module.exports = (function () {
 		if (index >= srcArr.length) {
 			index = srcArr.length - 1;
 		}
-
-		// srcArr = srcArr.reverse();
 
 		_currentIndex = index;
 		_MAX_INDEX = srcArr.length - 1;

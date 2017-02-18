@@ -21,7 +21,27 @@ function PreViewPage(size, src) {
 }
 
 PreViewPage.prototype.reset = function () {
+	this._offEvent();
 	this.preView.reset();
+};
+
+PreViewPage.prototype._offEvent = function () {
+	var hammer = this.hammer;
+	hammer.off('doubletap', this._handleDoubleTap.bind(this))
+		.off('pan', this._handlePan.bind(this))
+		.off('panend', this._handlePanEnd.bind(this))
+		.off('pinch', this._handlePinch.bind(this))
+		.off('pinchend', this._handlePinchEnd.bind(this));
+};
+
+PreViewPage.prototype._bindEvent = function () {
+	var hammer = this.hammer;
+
+	hammer.on('doubletap', this._handleDoubleTap.bind(this))
+		.on('pan', this._handlePan.bind(this))
+		.on('panend', this._handlePanEnd.bind(this))
+		.on('pinch', this._handlePinch.bind(this))
+		.on('pinchend', this._handlePinchEnd.bind(this));
 };
 
 PreViewPage.prototype._init = function () {
@@ -29,12 +49,6 @@ PreViewPage.prototype._init = function () {
 
 	hammer.get('pinch').set({enable: true});
 	hammer.get('doubletap').set({posThreshold: 60});
-
-	hammer.on('doubletap', this._handleDoubleTap.bind(this))
-		.on('pan', this._handlePan.bind(this))
-		.on('panend', this._handlePanEnd.bind(this))
-		.on('pinch', this._handlePinch.bind(this))
-		.on('pinchend', this._handlePinchEnd.bind(this));
 };
 
 PreViewPage.prototype._handleDoubleTap = function(ev) {

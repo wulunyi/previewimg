@@ -1,8 +1,8 @@
 {
   "name": "previewimg",
-  "version": "1.0.17",
+  "version": "1.0.26",
   "description": "",
-  "main": "index.js",
+  "main": "lib/index.bundle.js",
   "directories": {
     "test": "test"
   },

@@ -22,7 +22,9 @@ module.exports = {
 	output: {
 		'filename': '[name].bundle.js',
 		'path': 'lib',
-		'publicPath': '/preViewImg/dist'
+		'publicPath': '/preViewImg/dist',
+		libraryTarget: 'umd',
+		umdNamedDefine: true
 	},
 
 	resolve: {
@@ -68,12 +70,12 @@ module.exports = {
 	},
 
 	plugins: [
-		new HtmlWebpackPlugin({
-			filename: path.resolve(DIST_PATH, 'index.html'),
-			template: path.resolve(TEST_PATH, 'page/index.html'),
-			chunks: ['index'],
-			inject: 'body'
-		}),
+		// new HtmlWebpackPlugin({
+		// 	filename: path.resolve(DIST_PATH, 'index.html'),
+		// 	template: path.resolve(TEST_PATH, 'page/index.html'),
+		// 	chunks: ['index'],
+		// 	inject: 'body'
+		// }),
 		new webpack.HotModuleReplacementPlugin()
 	]
 };

@@ -4,62 +4,88 @@
  */
 'use strict';
 var util = {
-	getOffCanvas:(function(){
-		var cache = {};
-		var _shift = Array.prototype.shift;
+	// getOffCanvas:(function(){
+	// 	var cache = {};
+	// 	var _shift = Array.prototype.shift;
+	//
+	// 	return function (){
+	// 		var img = _shift.call(arguments);
+	// 		var w = _shift.call(arguments);
+	// 		var h = _shift.call(arguments);
+	//
+	// 		if(!cache[img.src]){
+	// 			var canvas = document.createElement('canvas');
+	// 			var ctx = canvas.getContext('2d');
+	//
+	// 			canvas.width = w;
+	// 			canvas.height = h;
+	//
+	// 			ctx.drawImage(img, 0, 0, w, h);
+	//
+	// 			cache[img.src] = canvas;
+	// 		}
+	//
+	// 		return cache[img.src];
+	// 	}
+	// })(),
 
-		return function (){
-			var img = _shift.call(arguments);
-			var w = _shift.call(arguments);
-			var h = _shift.call(arguments);
+	getOffCanvas: function(img, w, h){
+		var canvas = document.createElement('canvas');
+		var ctx = canvas.getContext('2d');
 
-			if(!cache[img.src]){
-				var canvas = document.createElement('canvas');
-				var ctx = canvas.getContext('2d');
+		canvas.width = w;
+		canvas.height = h;
 
-				canvas.width = w;
-				canvas.height = h;
+		ctx.drawImage(img, 0, 0, w, h);
 
-				ctx.drawImage(img, 0, 0, w, h);
-
-				cache[img.src] = canvas;
-			}
-
-			return cache[img.src];
-		}
-	})(),
+		return canvas;
+	},
 
 	/**
 	 * @description 下载图片
 	 * @param src [string] 图片地址
 	 * @param cb [function] 回调函数
 	 */
-	getImg:(function () {
-		var _imgCache = {};
-		var _shift = Array.prototype.shift;
+	// getImg:(function () {
+	// 	var _imgCache = {};
+	// 	var _shift = Array.prototype.shift;
+	//
+	// 	return function () {
+	// 		var src = _shift.call(arguments),
+	// 			cb = _shift.call(arguments);
+	//
+	// 		if(!_imgCache[src]){
+	// 			var imgObj = document.createElement('img');
+	//
+	// 			imgObj.addEventListener('load', ()=> {
+	// 				_imgCache[src] = imgObj;
+	// 				cb && cb(imgObj);
+	// 			});
+	//
+	// 			imgObj.addEventListener('error', ()=> {
+	// 				console.log('-> 图片加载失败,请检查图片是否存在');
+	// 			});
+	//
+	// 			imgObj.src = src;
+	// 		}
+	//
+	// 		cb(_imgCache[src]);
+	// 	}
+	// })(),
 
-		return function () {
-			var src = _shift.call(arguments),
-				cb = _shift.call(arguments);
+	getImg: function (src, cb) {
+		var imgObj = document.createElement('img');
 
-			if(!_imgCache[src]){
-				var imgObj = document.createElement('img');
+		imgObj.addEventListener('load', ()=> {
+			cb && cb(imgObj);
+		});
 
-				imgObj.addEventListener('load', ()=> {
-					_imgCache[src] = imgObj;
-					cb && cb(imgObj);
-				});
+		imgObj.addEventListener('error', ()=> {
+			console.log('-> 图片加载失败,请检查图片是否存在');
+		});
 
-				imgObj.addEventListener('error', ()=> {
-					console.log('-> 图片加载失败,请检查图片是否存在');
-				});
-
-				imgObj.src = src;
-			}
-
-			cb(_imgCache[src]);
-		}
-	})(),
+		imgObj.src = src;
+	},
 
 	getSize: function(dom) {
 		var boundData = dom.getBoundingClientRect();
