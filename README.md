@@ -1,30 +1,28 @@
-# 图片预览组件
+# Image preview
 
-## 功能
-提供类QQ和微信的图片预览功能，可对一组图片进行滑动并预览;
-支持放大，缩小，移动，最大放大倍数为4；双击为2倍放大
+## Description
+Provide preview function for image like QQ and WeChat, a group of pictures can be sliding and preview;
+Support zoom in, zoom out, move, the maximum magnification of 4; double-click to 2 times zoom
 
-## 依赖库
+## Dependencies
 ＋ hammerjs
 
 ## API
 
 ### show(srcs,[index]);
-srcs: 单个图片地址或多个地址数组
-index: 当前展示图片的下标，默认为零
-注：不传参数表示显示上一次的数据
+srcs: A single picture address or multiple address arrays
+index: The current display of the picture of the subscript, default zero
 
 ### hide
-参数无控制组件的隐藏
+Hide the panel
 
 ## 安装使用
 ```shell
-npm install previewimg -D
+npm install previewimg --save-dev
 ```
 
 ```javascript
 var preViewImg = require('previewimg');
-preViewImg.show('....jpg',0);
+preViewImg.show(['....jpg','...jpg'],0);
 preViewImg.hide();
-preViewImg.show();
 ```
