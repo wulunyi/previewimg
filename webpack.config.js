@@ -20,7 +20,7 @@ module.exports = {
 	},
 
 	output: {
-		'filename': '[name].bundle.js',
+		'filename': 'previewimg.js',
 		'path': 'lib',
 		'publicPath': '/preViewImg/dist',
 		libraryTarget: 'umd',
@@ -28,12 +28,21 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: ['', '.js', '.scss'],
+		extensions: ['.js', '.scss'],
 		alias: {
 			css: path.join(TEST_PATH, 'css'),
 			js: path.join(TEST_PATH, 'js'),
 			img: path.join(TEST_PATH, 'images'),
 			src: path.join(SRC_PATH)
+		}
+	},
+
+	externals: {
+		"hammerjs": {
+			commonjs: "hammerjs",
+			commonjs2: "hammerjs",
+			amd: "hammerjs",
+			root: "hammerjs"
 		}
 	},
 
@@ -76,7 +85,32 @@ module.exports = {
 		// 	chunks: ['index'],
 		// 	inject: 'body'
 		// }),
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.NoEmitOnErrorsPlugin(),
+		// new webpack.DefinePlugin({
+		// 	'process.env.NODE_ENV': JSON.stringify(ENV)
+		// }),
+		new webpack.optimize.UglifyJsPlugin({
+			output: {
+				comments: false,
+				beautify: false,
+			},
+			compress: {
+				warnings: false,
+				conditionals: true,
+				unused: true,
+				comparisons: true,
+				sequences: true,
+				dead_code: true,
+				evaluate: true,
+				if_return: true,
+				join_vars: true,
+				negate_iife: false,
+				drop_console: true,
+				collapse_vars: true,
+				reduce_vars: true,
+			}
+		}),
 	]
 };
 
