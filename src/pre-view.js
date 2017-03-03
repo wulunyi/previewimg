@@ -128,7 +128,7 @@ module.exports = (function () {
 
 			// 设置偏移
 			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
-			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
+			_eventHandler.dom.style.webkitTransform = "translate(" + offsetDistance + 'px)';
 
 			if (tempIndex !== _currentIndex) {
 				_preList[_currentIndex]._bindEvent();
