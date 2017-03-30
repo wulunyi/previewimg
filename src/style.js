@@ -8,13 +8,13 @@
 	var style = document.createElement('style');
 	style.innerHTML = '\
 	#pv-stage {\
-		position: absolute;\
+		position: fixed;\
 		left: 0;\
 		top: 0;\
-		z-index: 9999;\
+		z-index: 99999;\
 		overflow: hidden;\
-		height: 100vh;\
-		width: 100vw;\
+		height: 100%;\
+		width: 100%;\
 		background: rgb(0, 0, 0);\
 	}\
 	.pv-panel {\
@@ -33,10 +33,9 @@
 	}\
 	.pv-panel li{\
 		float: left;\
-		width: 100vw;\
 	}\
 	.pv-panel canvas{\
-		width: 100vw;\
+		width: 100%;\
 	}\
 	.pv-show-box{\
 		position: absolute;\

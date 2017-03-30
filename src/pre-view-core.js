@@ -204,6 +204,12 @@ PreViewImg.prototype._pullImg = function() {
 		});
 
 		imgObj.src = src;
+
+		if(imgObj.complete){
+			cache[src] = imgObj;
+
+			cb && cb(imgObj);
+		}
 	}
 };
 

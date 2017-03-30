@@ -187,6 +187,7 @@ module.exports = (function () {
 	function _createPreView() {
 		var src = [].shift.call(arguments);
 		var innerDom = util.createDom('li');
+		innerDom.style.width = document.body.clientWidth + 'px';
 		var preViewWrap = new PreViewPage(_SIZE, src);
 
 		_preList.push(preViewWrap);
