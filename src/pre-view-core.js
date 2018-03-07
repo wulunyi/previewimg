@@ -10,7 +10,7 @@ function PreViewImg(canvas, size, src, options) {
 	if (canvas.getContext) {
 		//解决android的图片预览模糊的问题
 		var dpr = window.devicePixelRatio || 1;
-		dpr = dpr > 2 ? 1.5 : dpr;
+		// dpr = dpr > 2 ? 1.5 : dpr;
 
 		var w = size.width * dpr;
 		var h = size.height * dpr;
@@ -91,7 +91,7 @@ PreViewImg.prototype._draw = function (imgObj) {
 	var ctx = this.ctx;
 
 	if (imgObj != undefined) {
-		this.offCanvas = util.getOffCanvas(imgObj, this.sw, this.sw);
+		this.offCanvas = util.getOffCanvas(imgObj, this.sw * this.ratio * 4, this.sw * this.ratio * 4);
 	}
 
 	ctx.clearRect(0, 0, this.w, this.h);

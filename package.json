@@ -1,6 +1,6 @@
 {
   "name": "previewimg",
-  "version": "1.0.34",
+  "version": "1.0.35",
   "description": "",
   "main": "lib/previewimg.js",
   "directories": {
