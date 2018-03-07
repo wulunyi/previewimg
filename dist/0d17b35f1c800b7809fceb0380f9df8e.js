@@ -71,7 +71,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({11:[function(require,module,exports) {
+})({6:[function(require,module,exports) {
 /**
  * @description 动画API兼容处理
  */
@@ -103,7 +103,7 @@ require = (function (modules, cache, entry) {
         };
     }
 })();
-},{}],12:[function(require,module,exports) {
+},{}],7:[function(require,module,exports) {
 /**
  * @description Created by wulunyi on 16/12/11.
  * @author wulunyi
@@ -165,7 +165,7 @@ require = (function (modules, cache, entry) {
 
 	document.getElementsByTagName('head')[0].appendChild(style);
 })();
-},{}],13:[function(require,module,exports) {
+},{}],8:[function(require,module,exports) {
 /**
  * @description 工具集
  * @author wulunyi.
@@ -283,7 +283,7 @@ var util = {
 };
 
 module.exports = util;
-},{}],16:[function(require,module,exports) {
+},{}],14:[function(require,module,exports) {
 /**
  * @description Created by wulunyi on 16/12/11.
  * @author wulunyi
@@ -295,7 +295,7 @@ var util = require('./util');
 function PreViewImg(canvas, size, src, options) {
 	if (canvas.getContext) {
 		//解决android的图片预览模糊的问题
-		var dpr = window.devicePixelRatio || 1;
+		var dpr = 1; //window.devicePixelRatio || 1;
 		// dpr = dpr > 2 ? 1.5 : dpr;
 
 		var w = size.width * dpr;
@@ -377,7 +377,7 @@ PreViewImg.prototype._draw = function (imgObj) {
 	var ctx = this.ctx;
 
 	if (imgObj != undefined) {
-		this.offCanvas = util.getOffCanvas(imgObj, this.sw * this.ratio * 4, this.sw * this.ratio * 4);
+		this.offCanvas = util.getOffCanvas(imgObj, this.sw * 4, this.sw * 4);
 	}
 
 	ctx.clearRect(0, 0, this.w, this.h);
@@ -683,7 +683,7 @@ PreViewImg.prototype.moving = function (offsetX, offsetY) {
 };
 
 module.exports = PreViewImg;
-},{"./util":13}],15:[function(require,module,exports) {
+},{"./util":8}],15:[function(require,module,exports) {
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
@@ -3328,7 +3328,7 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],14:[function(require,module,exports) {
+},{}],9:[function(require,module,exports) {
 /**
  * @description Created by wulunyi on 16/12/11.
  * @author wulunyi
@@ -3435,7 +3435,7 @@ PreViewPage.prototype._handlePanEnd = function (ev) {
 };
 
 module.exports = PreViewPage;
-},{"./pre-view-core":16,"hammerjs":15,"./util":13}],10:[function(require,module,exports) {
+},{"./pre-view-core":14,"hammerjs":15,"./util":8}],4:[function(require,module,exports) {
 /**
  * @description Created by wulunyi on 16/11/29.
  * @author wulunyi
@@ -3707,7 +3707,7 @@ module.exports = function () {
 		panel: _PRE_PANEL
 	};
 }();
-},{"./animation":11,"./style":12,"./util":13,"./pre-view-page":14,"hammerjs":15}],4:[function(require,module,exports) {
+},{"./animation":6,"./style":7,"./util":8,"./pre-view-page":9,"hammerjs":15}],2:[function(require,module,exports) {
 'use strict';
 
 var _preView = require('../src/pre-view');
@@ -3716,8 +3716,8 @@ var _preView2 = _interopRequireDefault(_preView);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_preView2.default.show(['https://si.geilicdn.com/bj-IM-320410048-1520394704121-29645018_750_2297.jpg', 'https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
-},{"../src/pre-view":10}],20:[function(require,module,exports) {
+_preView2.default.show(['https://si.geilicdn.com/hz_img_11a500000161fe9151770a02685e_750_2297_unadjust.png', 'https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
+},{"../src/pre-view":4}],18:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -3739,7 +3739,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '59538' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '65292' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -3840,5 +3840,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id);
   });
 }
-},{}]},{},[20,4])
+},{}]},{},[18,2])
 //# sourceMappingURL=/dist/0d17b35f1c800b7809fceb0380f9df8e.map
