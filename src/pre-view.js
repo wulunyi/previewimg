@@ -254,6 +254,10 @@ module.exports = (function () {
 			_PRE_PANEL.removeChild(_tempChild);
 			_tempChild = null;
 		}
+
+		if (typeof options.onHide === 'function') {
+			options.onHide();
+		}
 	}
 
 	return {
