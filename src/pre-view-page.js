@@ -8,10 +8,10 @@ var PreView = require('./pre-view-core');
 var Hammer = require('hammerjs');
 var util = require('./util');
 
-function PreViewPage(size, src) {
+function PreViewPage(size, src, dom) {
 	this.canvas = util.createDom('canvas');
 
-	this.hammer = new Hammer(this.canvas);
+	this.hammer = new Hammer(dom);
 	this.preView = new PreView(this.canvas, size, src);
 
 	this.pinchPoint = null;

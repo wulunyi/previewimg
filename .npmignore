@@ -1,0 +1,8 @@
+.cache
+.idea
+.vscode
+dist
+demo
+node_modules
+src
+test

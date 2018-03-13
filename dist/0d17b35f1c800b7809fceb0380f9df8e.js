@@ -71,619 +71,7 @@ require = (function (modules, cache, entry) {
 
   // Override the current require with this new one
   return newRequire;
-})({6:[function(require,module,exports) {
-/**
- * @description 动画API兼容处理
- */
-'use strict';
-
-(function () {
-    var lastTime = 0;
-    var vendors = ['webkit', 'moz'];
-
-    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame'] || window[vendors[x] + 'CancelRequestAnimationFrame'];
-    }
-
-    if (!window.requestAnimationFrame) window.requestAnimationFrame = function (callback, element) {
-        var currTime = new Date().getTime();
-        var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-        var id = window.setTimeout(function () {
-            callback(currTime + timeToCall);
-        }, timeToCall);
-
-        lastTime = currTime + timeToCall;
-        return id;
-    };
-
-    if (!window.cancelAnimationFrame) {
-        window.cancelAnimationFrame = function (id) {
-            clearTimeout(id);
-        };
-    }
-})();
-},{}],7:[function(require,module,exports) {
-/**
- * @description Created by wulunyi on 16/12/11.
- * @author wulunyi
- */
-'use strict';
-
-(function () {
-	var style = document.createElement('style');
-	style.innerHTML = '\
-	#pv-stage {\
-		position: fixed;\
-		left: 0;\
-		top: 0;\
-		z-index: 99999;\
-		overflow: hidden;\
-		height: 100%;\
-		width: 100%;\
-		background: rgb(0, 0, 0);\
-	}\
-	.pv-panel {\
-		position: absolute;\
-		left: 0;\
-		top: 0;\
-		margin: 0;\
-		padding: 0;\
-		min-width:100vw;\
-		height: 100%;\
-		list-style:none;\
-		-webkit-transition:all 200ms ease;\
-		-moz-transition:all 200ms ease;\
-		-ms-transition:all 200ms ease;\
-		transition: all 200ms ease;\
-	}\
-	.pv-panel li{\
-		float: left;\
-	}\
-	.pv-panel canvas{\
-		width: 100%;\
-	}\
-	.pv-show-box{\
-		position: absolute;\
-		left: 0;\
-		bottom: 0;\
-		width: 100%;\
-	}\
-	.pv-show-page{\
-		position: absolute;\
-		left: 50%;\
-		bottom: 30px;\
-		-webkit-transform: translateX(-50%);\
-		-moz-transform: translateX(-50%);\
-		-ms-transform: translateX(-50%);\
-		-o-transform: translateX(-50&);\
-		transform: translateX(-50%);\
-		line-height:1em;\
-		color: #7b7b7b;\
-	}\
-	';
-
-	document.getElementsByTagName('head')[0].appendChild(style);
-})();
-},{}],8:[function(require,module,exports) {
-/**
- * @description 工具集
- * @author wulunyi.
- */
-'use strict';
-
-var util = {
-	// getOffCanvas:(function(){
-	// 	var cache = {};
-	// 	var _shift = Array.prototype.shift;
-	//
-	// 	return function (){
-	// 		var img = _shift.call(arguments);
-	// 		var w = _shift.call(arguments);
-	// 		var h = _shift.call(arguments);
-	//
-	// 		if(!cache[img.src]){
-	// 			var canvas = document.createElement('canvas');
-	// 			var ctx = canvas.getContext('2d');
-	//
-	// 			canvas.width = w;
-	// 			canvas.height = h;
-	//
-	// 			ctx.drawImage(img, 0, 0, w, h);
-	//
-	// 			cache[img.src] = canvas;
-	// 		}
-	//
-	// 		return cache[img.src];
-	// 	}
-	// })(),
-
-	getOffCanvas: function getOffCanvas(img, w, h) {
-		var canvas = document.createElement('canvas');
-		var ctx = canvas.getContext('2d');
-
-		canvas.width = w;
-		canvas.height = h;
-
-		ctx.drawImage(img, 0, 0, w, h);
-
-		return canvas;
-	},
-
-	/**
-  * @description 下载图片
-  * @param src [string] 图片地址
-  * @param cb [function] 回调函数
-  */
-	// getImg:(function () {
-	// 	var _imgCache = {};
-	// 	var _shift = Array.prototype.shift;
-	//
-	// 	return function () {
-	// 		var src = _shift.call(arguments),
-	// 			cb = _shift.call(arguments);
-	//
-	// 		if(!_imgCache[src]){
-	// 			var imgObj = document.createElement('img');
-	//
-	// 			imgObj.addEventListener('load', ()=> {
-	// 				_imgCache[src] = imgObj;
-	// 				cb && cb(imgObj);
-	// 			});
-	//
-	// 			imgObj.addEventListener('error', ()=> {
-	// 				console.log('-> 图片加载失败,请检查图片是否存在');
-	// 			});
-	//
-	// 			imgObj.src = src;
-	// 		}
-	//
-	// 		cb(_imgCache[src]);
-	// 	}
-	// })(),
-
-	getImg: function getImg(src, cb) {
-		var imgObj = document.createElement('img');
-
-		imgObj.addEventListener('load', function () {
-			cb && cb(imgObj);
-		});
-
-		imgObj.addEventListener('error', function () {
-			console.log('-> 图片加载失败,请检查图片是否存在');
-		});
-
-		imgObj.src = src;
-	},
-
-	getSize: function getSize(dom) {
-		var boundData = dom.getBoundingClientRect();
-
-		return {
-			height: boundData.height,
-			width: boundData.width
-		};
-	},
-
-	toFixed: function toFixed(num) {
-		return Math.floor(num * 100) / 100;
-	},
-
-	createDom: function createDom() {
-		var tagName = [].shift.call(arguments) || 'div';
-		var options = [].shift.call(arguments) || {};
-		var resultDom = document.createElement(tagName);
-
-		for (var propoty in options) {
-			resultDom[propoty] = options[propoty];
-		}
-
-		return resultDom;
-	}
-};
-
-module.exports = util;
-},{}],14:[function(require,module,exports) {
-/**
- * @description Created by wulunyi on 16/12/11.
- * @author wulunyi
- */
-'use strict';
-
-var util = require('./util');
-
-function PreViewImg(canvas, size, src, options) {
-	if (canvas.getContext) {
-		//解决android的图片预览模糊的问题
-		var dpr = 1; //window.devicePixelRatio || 1;
-		// dpr = dpr > 2 ? 1.5 : dpr;
-
-		var w = size.width * dpr;
-		var h = size.height * dpr;
-
-		// 解决三星等出现横屏后突然竖屏图像异常的问题
-		if (w > h) {
-			var _ref = [h, w];
-			w = _ref[0];
-			h = _ref[1];
-		}
-
-		// 面板容器宽高
-		canvas.width = w;
-		canvas.height = h;
-
-		// 绘制面板大小
-		this.w = w;
-		this.h = h;
-
-		this.ratio = dpr;
-
-		this.canvas = canvas;
-		this.ctx = canvas.getContext('2d');
-		this.offCanvas = null;
-
-		// 可选参数
-		var defaultOptions = {
-			maxScale: 4, // 最大缩放边界
-			minScale: 1, // 最小缩放边界
-			doubleTapScale: 2 // 双击缩放大小
-			//rotate: false,
-		};
-
-		this.options = options || defaultOptions;
-
-		this.sw = 0; // 绘制宽高
-		this.sh = 0; // 绘制宽高
-
-		this.ox = this.w / 2; // 绘制原点
-		this.oy = this.h / 2; // 绘制原点
-
-		this.px = 0; // 绘制开始坐标
-		this.py = 0; // 绘制开始坐标
-
-		this.scale = 1; // 绘制缩放比
-
-		this.timer = null; // 动画返回锚点
-
-		this.cache = {};
-
-		// this._init(src);// 初始化
-		this.src = src;
-		this.init = false;
-	} else {
-		console.warn('参数错误,需要canvas dom');
-	}
-}
-
-PreViewImg.prototype._init = function () {
-	if (this.init) {
-		return;
-	}
-
-	this.init = true;
-
-	var src = this.src;
-
-	this._loading('start'); // 开启加载中动画...
-
-	var self = this;
-
-	self._pullImg(src, function (imgObj) {
-		self._loading('end')._getInitData(imgObj)._draw(imgObj);
-	});
-};
-
-PreViewImg.prototype._draw = function (imgObj) {
-	var ctx = this.ctx;
-
-	if (imgObj != undefined) {
-		this.offCanvas = util.getOffCanvas(imgObj, this.sw * 4, this.sw * 4);
-	}
-
-	ctx.clearRect(0, 0, this.w, this.h);
-	ctx.save();
-	ctx.translate(this.ox, this.oy);
-	ctx.scale(this.scale, this.scale);
-	ctx.drawImage(this.offCanvas, this.px, this.py, this.sw, this.sh);
-	ctx.restore();
-
-	return this;
-};
-
-PreViewImg.prototype._getInitData = function (imgObj) {
-	// 图片自身的宽高
-	var sw = imgObj.width;
-	var sh = imgObj.height;
-
-	// 面板的宽高
-	var dw = this.w;
-	var dh = this.h;
-
-	var ratio = dw / sw; // 图片绘制到面板本身的缩放比
-
-	// 已宽为准进行缩放后图片在面板的高度不超过面板本身的高度
-	if (ratio * sh <= dh) {
-		this.sw = dw;
-		this.sh = util.toFixed(sh * ratio);
-	} else {
-		ratio = dh / sh;
-
-		this.sh = dh;
-		this.sw = ratio * sw;
-	}
-
-	this.px = -(this.sw / 2);
-	this.py = -(this.sh / 2);
-
-	return this;
-};
-
-PreViewImg.prototype._loading = function (command) {
-	var self = this;
-	var w = self.w;
-	var h = self.h;
-	var ctx = self.ctx;
-	var count = 0; // 计数
-
-	cancelAnimationFrame(this.timer);
-
-	ctx.clearRect(0, 0, w, h);
-	ctx.fillStyle = '#ffffff';
-	ctx.strokeStyle = '#ffffff';
-
-	var base = self.ratio;
-
-	/**
-  * @description 加载动画
-  */
-	function loadingAnimation() {
-		ctx.clearRect(0, 0, w, h);
-		ctx.save();
-		ctx.translate(w / 2, h / 2);
-		ctx.rotate(base / 2 * 5 * count * Math.PI / 180);
-
-		for (var i = 0; i < 9; i++) {
-			ctx.save();
-
-			ctx.rotate(36 * i * Math.PI / 180);
-			ctx.beginPath();
-			ctx.arc(30 * base, 30 * base, (1 + i) * base, 0, Math.PI * 2, false);
-			ctx.closePath();
-			ctx.fill();
-			ctx.stroke();
-
-			ctx.restore();
-		}
-
-		ctx.restore();
-
-		count++;
-
-		self.timer = requestAnimationFrame(loadingAnimation);
-	}
-
-	if (command !== 'end') {
-		loadingAnimation();
-	}
-
-	return this;
-};
-
-PreViewImg.prototype._pullImg = function () {
-	var cache = this.cache;
-	var src = [].shift.call(arguments) || '';
-	var cb = [].shift.call(arguments);
-
-	if (cache[src]) {
-		cb && cb(cache[src]);
-	} else {
-		var imgObj = document.createElement('img');
-
-		imgObj.addEventListener('load', function () {
-			cache[src] = imgObj;
-
-			cb && cb(imgObj);
-		});
-
-		imgObj.addEventListener('error', function () {
-			console.log('-> 图片加载失败,请检查图片是否存在');
-		});
-
-		imgObj.src = src;
-
-		if (imgObj.complete) {
-			cache[src] = imgObj;
-
-			cb && cb(imgObj);
-		}
-	}
-};
-
-PreViewImg.prototype.animation = function (toScale) {
-	cancelAnimationFrame(this.timer);
-
-	var times = 10;
-	var speed = (toScale - this.scale) / times;
-	var base = this.scale;
-	var count = 1;
-	var self = this;
-
-	/**
-  * @description 动画
-  */
-	function innerAnimate() {
-		if (count <= times) {
-			var ratio = base + count * speed;
-
-			self.scaling(ratio);
-			count++;
-			self.timer = requestAnimationFrame(innerAnimate);
-		} else {
-			self.scaling(toScale);
-
-			cancelAnimationFrame(self.timer);
-		}
-	}
-
-	innerAnimate();
-};
-
-PreViewImg.prototype.scaling = function (scale, tx, ty) {
-	tx = this.ratio * tx;
-	ty = this.ratio * ty;
-
-	if (this.offCanvas == null) {
-		return this;
-	}
-
-	if (scale === null) {
-		var toScale = 0;
-
-		if (this.scale == 1) {
-			this._getBiggerOriginPoint(tx, ty, this.options.doubleTapScale);
-			toScale = this.options.doubleTapScale;
-		} else {
-			this._getScaleSmallerPoint();
-			toScale = 1;
-		}
-
-		this.animation(toScale);
-	} else if (scale >= 1) {
-		this.scale = scale;
-		this._draw();
-	}
-
-	return this;
-};
-
-PreViewImg.prototype.reset = function () {
-	if (this.scale !== 1) {
-		this._getScaleSmallerPoint();
-		var toScale = 1;
-
-		this.animation(toScale);
-	}
-};
-
-PreViewImg.prototype.scaled = function (scale, x, y) {
-	x = this.ratio * x;
-	y = this.ratio * y;
-
-	var toScale = this.scale * scale;
-
-	if (scale < 1) {
-		this._getScaleSmallerPoint();
-	} else {
-		if (this.panchX != x && this.panchY != y) {
-			this.panchX = x;
-			this.panchY = y;
-
-			this._getBiggerOriginPoint(x, y, toScale);
-		}
-	}
-
-	if (toScale > 4) {
-		toScale = 4;
-	}
-
-	this.scaling(toScale);
-};
-
-PreViewImg.prototype._getScaleSmallerPoint = function () {
-	var scale = this.scale;
-	if (scale == 1) {
-		return;
-	}
-
-	var cux = this.px * this.scale + this.ox;
-	var cuy = this.py * this.scale + this.oy;
-
-	var originPx = -this.sw / 2 + this.w / 2;
-	var originPy = -this.sh / 2 + this.h / 2;
-
-	this.ox = (cux - originPx * scale) / (1 - scale);
-	this.oy = (cuy - originPy * scale) / (1 - scale);
-
-	this.px = originPx - this.ox;
-	this.py = originPy - this.oy;
-
-	return this;
-};
-
-PreViewImg.prototype._getBiggerOriginPoint = function (tx, ty, scale) {
-	var cux = this.px * this.scale + this.ox;
-	var cuy = this.py * this.scale + this.oy;
-
-	var maxX = cux + this.sw;
-	var maxY = cuy + this.sh;
-
-	if (this.sw * scale < this.w) {
-		this.ox = this.w / 2;
-	} else if (tx >= cux && tx <= maxX) {
-		this.ox = tx;
-	} else if (tx < cux) {
-		this.ox = cux;
-	} else if (tx > maxX) {
-		this.ox = maxX;
-	}
-
-	if (this.sh * scale < this.h) {
-		this.oy = this.h / 2;
-	} else if (ty >= cuy && ty <= maxY) {
-		this.oy = ty;
-	} else if (ty <= cuy) {
-		this.oy = cuy;
-	} else if (ty >= maxY) {
-		this.oy = maxY;
-	}
-
-	this.px = (cux - this.ox) / this.scale;
-	this.py = (cuy - this.oy) / this.scale;
-
-	return this;
-};
-
-PreViewImg.prototype.moving = function (offsetX, offsetY) {
-	offsetX = this.ratio * offsetX;
-	offsetY = this.ratio * offsetY;
-
-	if (this.offCanvas == null) {
-		return false;
-	}
-
-	var curX = this.px * this.scale + this.ox + offsetX;
-	var curY = this.py * this.scale + this.oy + offsetY;
-
-	var curMaxY = curY + this.sh * this.scale;
-	var curMaxX = curX + this.sw * this.scale;
-
-	var MaxX = this.w - this.sw * this.scale;
-	var MaxY = this.h - this.sh * this.scale;
-
-	// 5是用来做垂直滑动,可能带动的横向滑动的容错处理
-	if (curX >= 0 && offsetX > 5 || curX <= MaxX && offsetX < -5 || this.scale <= 1) {
-		return false;
-	}
-
-	if (curY < 0 || curMaxY > this.h) {
-		if (curY <= 0 && curY >= MaxY || curY < MaxY && offsetY > 0 || curY > 0 && offsetY < 0) {
-			this.oy += offsetY;
-		}
-	}
-
-	if (curX < 0 || curMaxX > this.w) {
-		if (curX <= 0 && curX >= MaxX || curX < MaxX && offsetX > 0 || curX > 0 && offsetX < 0) {
-			this.ox += offsetX;
-		}
-	}
-
-	this._draw();
-
-	return true;
-};
-
-module.exports = PreViewImg;
-},{"./util":8}],15:[function(require,module,exports) {
+})({16:[function(require,module,exports) {
 /*! Hammer.JS - v2.0.7 - 2016-04-22
  * http://hammerjs.github.io/
  *
@@ -3328,396 +2716,463 @@ if (typeof define === 'function' && define.amd) {
 
 })(window, document, 'Hammer');
 
-},{}],9:[function(require,module,exports) {
-/**
- * @description Created by wulunyi on 16/12/11.
- * @author wulunyi
- */
-'use strict';
-
-var PreView = require('./pre-view-core');
-var Hammer = require('hammerjs');
-var util = require('./util');
-
-function PreViewPage(size, src) {
-	this.canvas = util.createDom('canvas');
-
-	this.hammer = new Hammer(this.canvas);
-	this.preView = new PreView(this.canvas, size, src);
-
-	this.pinchPoint = null;
-	this.scale = 1;
-
-	this._init();
-}
-
-PreViewPage.prototype.reset = function () {
-	this._offEvent();
-	this.preView.reset();
-};
-
-PreViewPage.prototype.start = function () {
-	this.preView._init();
-};
-
-PreViewPage.prototype._offEvent = function () {
-	var hammer = this.hammer;
-	hammer.off('doubletap', this._handleDoubleTap.bind(this)).off('pan', this._handlePan.bind(this)).off('panend', this._handlePanEnd.bind(this)).off('pinch', this._handlePinch.bind(this)).off('pinchend', this._handlePinchEnd.bind(this));
-};
-
-PreViewPage.prototype._bindEvent = function () {
-	var hammer = this.hammer;
-
-	hammer.on('doubletap', this._handleDoubleTap.bind(this)).on('pan', this._handlePan.bind(this)).on('panend', this._handlePanEnd.bind(this)).on('pinch', this._handlePinch.bind(this)).on('pinchend', this._handlePinchEnd.bind(this));
-};
-
-PreViewPage.prototype._init = function () {
-	var hammer = this.hammer;
-
-	hammer.get('pinch').set({ enable: true });
-	hammer.get('doubletap').set({ posThreshold: 60 });
-};
-
-PreViewPage.prototype._handleDoubleTap = function (ev) {
-	var touchPoint = ev.center; // 获取点击数据
-
-	this.preView.scaling(null, touchPoint.x, touchPoint.y);
-};
-
-PreViewPage.prototype._handlePinch = function (ev) {
-	var center = ev.center;
-
-	if (this.pinchPoint === null) {
-		this.pinchPoint = center;
-	}
-
-	this.preView.scaled(ev.scale / this.scale, this.pinchPoint.x, this.pinchPoint.y);
-	this.scale = ev.scale;
-
-	ev.srcEvent.preventDefault();
-	return false;
-};
-
-PreViewPage.prototype._handlePinchEnd = function () {
-	//重置
-	this.scale = 1;
-	this.pinchPoint = null;
-};
-
-PreViewPage.prototype._handlePan = function (ev) {
-	var panPoint = ev.center;
-	var lastPanPoint = this.panPoint || panPoint;
-
-	var changePoint = {
-		x: panPoint.x - lastPanPoint.x,
-		y: panPoint.y - lastPanPoint.y
-	};
-
-	this.isMoving = this.preView.moving(changePoint.x, changePoint.y);
-
-	if (this.isMoving) {
-		this.panPoint = panPoint;
-
-		// 阻止冒泡
-		ev.srcEvent.stopPropagation();
-		return false;
-	}
-};
-
-PreViewPage.prototype._handlePanEnd = function (ev) {
-	this.panPoint = null;
-
-	if (this.isMoving) {
-		// 阻止冒泡
-		ev.srcEvent.stopPropagation();
-		return false;
-	}
-};
-
-module.exports = PreViewPage;
-},{"./pre-view-core":14,"hammerjs":15,"./util":8}],4:[function(require,module,exports) {
-/**
- * @description Created by wulunyi on 16/11/29.
- * @author wulunyi
- */
-'use strict';
-
+},{}],23:[function(require,module,exports) {
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-require('./animation');
-require('./style');
-
-var util = require('./util');
-var PreViewPage = require('./pre-view-page');
-var Hammer = require('hammerjs');
-
-module.exports = function () {
-	var _PRE_PANEL = null; // 预览面板
-	var _tempChild = null;
-	var _timer = null; // 计时器
-	var _deltaX = null; // X偏移量
-	var _currentIndex = 0; // 当前下标
-	var _MAX_INDEX = 0; // 最大下标
-	var _preList = []; // 预览列表
-	var _PAGE_DOM = {}; // 翻页dom元素
-
-	// 操作选项
-	var defaultOptions = {
-		tapHide: true
-	};
-
-	var options = {
-		tapHide: true // 是否开启点击关闭
-	};
-
-	// 容器大小
-	var _SIZE = {
-		width: window.innerWidth,
-		height: window.innerHeight
-	};
-
-	// 如果不存在则构建
-	if (!_PRE_PANEL) {
-		_PRE_PANEL = util.createDom('div', {
-			id: 'pv-stage'
-		});
-
-		// 页码容器
-		var pageWrapDom = util.createDom('div', {
-			className: 'pv-show-box'
-		});
-
-		// 页码
-		var pageItemDom = util.createDom('span', {
-			className: 'pv-show-page'
-		});
-
-		pageWrapDom.appendChild(pageItemDom);
-
-		_PRE_PANEL.appendChild(pageWrapDom);
-
-		_PAGE_DOM = pageItemDom;
-
-		// 隐藏
-		_PRE_PANEL.style.display = 'none';
-
-		document.body.appendChild(_PRE_PANEL);
-	}
-
-	var _eventHandler = {
-		dom: null,
-		tap: function handleTap(ev) {
-			clearTimeout(_timer);
-
-			// 预测用户是否要做双击操作
-			_timer = setTimeout(function () {
-				if (options.tapHide) {
-					_hide();
-				}
-			}, 300);
-
-			ev.srcEvent.preventDefault();
-			return false;
-		},
-		doubletap: function handleDoubleTap(ev) {
-			clearTimeout(_timer);
-
-			ev.srcEvent.preventDefault();
-			return false;
-		},
-		pan: function handlePan(ev) {
-			clearTimeout(_timer);
-
-			var deltaX = ev.deltaX;
-
-			if (_deltaX == null) {
-				_deltaX = deltaX;
-			}
-
-			var deltaDistance = deltaX - _deltaX;
-			var offSetDistance = deltaDistance + -_currentIndex * _SIZE.width;
-
-			if (_eventHandler.dom) {
-				_eventHandler.dom.style.transition = "none";
-				_eventHandler.dom.style.webkitTransition = "none";
-				_eventHandler.dom.style.transform = "translate(" + offSetDistance + 'px)';
-				_eventHandler.dom.style.webkitTransform = "translate(" + offSetDistance + 'px)';
-			}
-		},
-		panend: function handlePanEnd(ev) {
-			var maxDeltax = _SIZE.width * 0.1;
-			var deltaX = ev.deltaX - _deltaX;
-
-			_deltaX = null;
-
-			// 开启动画
-			_eventHandler.dom.style.transition = "all 200ms ease";
-			_eventHandler.dom.style.webkitTransition = "all 200ms ease";
-
-			var tempIndex = _currentIndex;
-
-			if (deltaX < -maxDeltax && _currentIndex < _MAX_INDEX) {
-				_currentIndex++;
-			} else if (deltaX > maxDeltax && _currentIndex > 0) {
-				_currentIndex--;
-			}
-
-			_setPage();
-
-			var offsetDistance = _SIZE.width * -_currentIndex;
-
-			// 设置偏移
-			_eventHandler.dom.style.transform = "translate(" + offsetDistance + 'px)';
-			_eventHandler.dom.style.webkitTransform = "translate(" + offsetDistance + 'px)';
-
-			if (tempIndex !== _currentIndex) {
-				_preList[_currentIndex]._bindEvent();
-				_preList[_currentIndex].start();
-				_preList[tempIndex].reset();
-			}
-		}
-	};
-
-	function _openEvent(dom) {
-		var hammer = new Hammer(dom);
-		hammer.get('doubletap').set({ posThreshold: 60 });
-		_eventHandler.dom = dom;
-
-		for (var event in _eventHandler) {
-			hammer.on(event, _eventHandler[event]);
-		}
-	}
-
-	function _render(srcArr) {
-		var dom = util.createDom('ul', {
-			className: 'pv-panel'
-		});
-
-		// 开启各种监听
-		_openEvent(dom);
-
-		// 设置滚动内容面板width
-		dom.style.width = srcArr.length * _SIZE.width + 'px';
-
-		var offsetDistance = -_currentIndex * _SIZE.width;
-
-		var property = "translate(" + offsetDistance + 'px)';
-
-		dom.style.transform = property;
-		dom.style.webkitTransform = property;
-
-		srcArr.forEach(function (src) {
-			dom.appendChild(_createPreView(src));
-		});
-
-		_PRE_PANEL.appendChild(dom);
-
-		// 绑定事件
-		_preList[_currentIndex]._bindEvent();
-		_preList[_currentIndex].start();
-
-		// 缓存面板
-		_tempChild = dom;
-	}
-
-	function _setPage() {
-		_PAGE_DOM.innerHTML = _currentIndex + 1 + '/' + (_MAX_INDEX + 1);
-	}
-
-	function _createPreView() {
-		var src = [].shift.call(arguments);
-		var innerDom = util.createDom('li');
-		innerDom.style.width = document.body.clientWidth + 'px';
-		var preViewWrap = new PreViewPage(_SIZE, src);
-
-		_preList.push(preViewWrap);
-		innerDom.appendChild(preViewWrap.canvas);
-
-		return innerDom;
-	}
-
-	function _show() {
-		_PRE_PANEL.style.display = 'block';
-
-		if (arguments.length === 0) {
-			return;
-		}
-
-		// 重置缓存列表
-		_preList = [];
-
-		// 获取参数
-		var srcArr = [].shift.call(arguments) || [];
-		var index = [].slice.call(arguments)[0] || 0;
-		var options = [].slice.call(arguments)[1];
-
-		if (options && (typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object') {
-			_set(options);
-		} else {
-			_set(defaultOptions);
-		}
-
-		if (!Array.isArray(srcArr)) {
-			srcArr = [srcArr];
-		}
-
-		if (index < 0 || !Number(index)) {
-			index = 0;
-		}
-
-		if (index >= srcArr.length) {
-			index = srcArr.length - 1;
-		}
-
-		_currentIndex = index;
-		_MAX_INDEX = srcArr.length - 1;
-
-		_render(srcArr);
-		_setPage();
-
-		return {
-			srcArr: srcArr,
-			index: index
-		};
-	}
-
-	function _set(obj) {
-		for (var key in obj) {
-			options[key] = obj[key];
-		}
-	}
-
-	function _hide() {
-		_PRE_PANEL.style.display = 'none';
-		// 清除缓存
-		if (_tempChild) {
-			_PRE_PANEL.removeChild(_tempChild);
-			_tempChild = null;
-		}
-
-		if (typeof options.onHide === 'function') {
-			options.onHide();
-		}
-	}
-
-	return {
-		set: _set,
-		show: _show,
-		hide: _hide,
-		panel: _PRE_PANEL
-	};
-}();
-},{"./animation":6,"./style":7,"./util":8,"./pre-view-page":9,"hammerjs":15}],2:[function(require,module,exports) {
+(function (t, e) {
+  if ("object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) && "object" == (typeof module === "undefined" ? "undefined" : _typeof(module))) module.exports = e(require("hammerjs"));else if ("function" == typeof define && define.amd) define(["hammerjs"], e);else {
+    var n = e("object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? require("hammerjs") : t.hammerjs);for (var i in n) {
+      ("object" == (typeof exports === "undefined" ? "undefined" : _typeof(exports)) ? exports : t)[i] = n[i];
+    }
+  }
+})(this, function (t) {
+  return function (t) {
+    function e(t) {
+      delete installedChunks[t];
+    }function n(t) {
+      var e = document.getElementsByTagName("head")[0],
+          n = document.createElement("script");n.type = "text/javascript", n.charset = "utf-8", n.src = u.p + "" + t + "." + g + ".hot-update.js", e.appendChild(n);
+    }function i() {
+      return new Promise(function (t, e) {
+        if ("undefined" == typeof XMLHttpRequest) return e(new Error("No browser support"));try {
+          var n = new XMLHttpRequest(),
+              i = u.p + "" + g + ".hot-update.json";n.open("GET", i, !0), n.timeout = 1e4, n.send(null);
+        } catch (t) {
+          return e(t);
+        }n.onreadystatechange = function () {
+          if (4 === n.readyState) if (0 === n.status) e(new Error("Manifest request to " + i + " timed out."));else if (404 === n.status) t();else if (200 !== n.status && 304 !== n.status) e(new Error("Manifest request to " + i + " failed."));else {
+            try {
+              var r = JSON.parse(n.responseText);
+            } catch (t) {
+              return void e(t);
+            }t(r);
+          }
+        };
+      });
+    }function r(t) {
+      var e = I[t];if (!e) return u;var n = function n(_n) {
+        return e.hot.active ? (I[_n] ? I[_n].parents.indexOf(t) < 0 && I[_n].parents.push(t) : _ = [t], e.children.indexOf(_n) < 0 && e.children.push(_n)) : _ = [], x = !1, u(_n);
+      },
+          i = function i(t) {
+        return { configurable: !0, enumerable: !0, get: function get() {
+            return u[t];
+          }, set: function set(e) {
+            u[t] = e;
+          } };
+      };for (var r in u) {
+        Object.prototype.hasOwnProperty.call(u, r) && Object.defineProperty(n, r, i(r));
+      }return Object.defineProperty(n, "e", { enumerable: !0, value: function value(t) {
+          function e() {
+            j--, "prepare" === D && (A[t] || h(t), 0 === j && 0 === O && d());
+          }return "ready" === D && s("prepare"), j++, u.e(t).then(e, function (t) {
+            throw e(), t;
+          });
+        } }), n;
+    }function o(t) {
+      var e = { _acceptedDependencies: {}, _declinedDependencies: {}, _selfAccepted: !1, _selfDeclined: !1, _disposeHandlers: [], _main: x, active: !0, accept: function accept(t, n) {
+          if ("undefined" == typeof t) e._selfAccepted = !0;else if ("function" == typeof t) e._selfAccepted = t;else if ("object" == (typeof t === "undefined" ? "undefined" : _typeof(t))) for (var i = 0; i < t.length; i++) {
+            e._acceptedDependencies[t[i]] = n || function () {};
+          } else e._acceptedDependencies[t] = n || function () {};
+        }, decline: function decline(t) {
+          if ("undefined" == typeof t) e._selfDeclined = !0;else if ("object" == (typeof t === "undefined" ? "undefined" : _typeof(t))) for (var n = 0; n < t.length; n++) {
+            e._declinedDependencies[t[n]] = !0;
+          } else e._declinedDependencies[t] = !0;
+        }, dispose: function dispose(t) {
+          e._disposeHandlers.push(t);
+        }, addDisposeHandler: function addDisposeHandler(t) {
+          e._disposeHandlers.push(t);
+        }, removeDisposeHandler: function removeDisposeHandler(t) {
+          var n = e._disposeHandlers.indexOf(t);n >= 0 && e._disposeHandlers.splice(n, 1);
+        }, check: c, apply: p, status: function status(t) {
+          return t ? void E.push(t) : D;
+        }, addStatusHandler: function addStatusHandler(t) {
+          E.push(t);
+        }, removeStatusHandler: function removeStatusHandler(t) {
+          var e = E.indexOf(t);e >= 0 && E.splice(e, 1);
+        }, data: b[t] };return x = !0, e;
+    }function s(t) {
+      D = t;for (var e = 0; e < E.length; e++) {
+        E[e].call(null, t);
+      }
+    }function a(t) {
+      return +t + "" === t ? +t : t;
+    }function c(t) {
+      if ("idle" !== D) throw new Error("check() is only allowed in idle status");return w = t, s("check"), i().then(function (t) {
+        if (!t) return s("idle"), null;T = {}, A = {}, H = t.c, y = t.h, s("prepare");var e = new Promise(function (t, e) {
+          m = { resolve: t, reject: e };
+        });return v = {}, h(0), "prepare" === D && 0 === j && 0 === O && d(), e;
+      });
+    }function l(t, e) {
+      if (H[t] && T[t]) {
+        T[t] = !1;for (var n in e) {
+          Object.prototype.hasOwnProperty.call(e, n) && (v[n] = e[n]);
+        }0 === --O && 0 === j && d();
+      }
+    }function h(t) {
+      H[t] ? (T[t] = !0, O++, n(t)) : A[t] = !0;
+    }function d() {
+      s("ready");var t = m;if (m = null, t) if (w) p(w).then(function (e) {
+        t.resolve(e);
+      }, function (e) {
+        t.reject(e);
+      });else {
+        var e = [];for (var n in v) {
+          Object.prototype.hasOwnProperty.call(v, n) && e.push(a(n));
+        }t.resolve(e);
+      }
+    }function p(n) {
+      function i(t) {
+        for (var e = [t], n = {}, i = e.slice().map(function (t) {
+          return { chain: [t], id: t };
+        }); i.length > 0;) {
+          var o = i.pop(),
+              s = o.id,
+              a = o.chain;if (h = I[s], h && !h.hot._selfAccepted) {
+            if (h.hot._selfDeclined) return { type: "self-declined", chain: a, moduleId: s };if (h.hot._main) return { type: "unaccepted", chain: a, moduleId: s };for (var c = 0; c < h.parents.length; c++) {
+              var l = h.parents[c],
+                  d = I[l];if (d) {
+                if (d.hot._declinedDependencies[s]) return { type: "declined", chain: a.concat([l]), moduleId: s, parentId: l };e.indexOf(l) >= 0 || (d.hot._acceptedDependencies[s] ? (n[l] || (n[l] = []), r(n[l], [s])) : (delete n[l], e.push(l), i.push({ chain: a.concat([l]), id: l })));
+              }
+            }
+          }
+        }return { type: "accepted", moduleId: t, outdatedModules: e, outdatedDependencies: n };
+      }function r(t, e) {
+        for (var n = 0; n < e.length; n++) {
+          var i = e[n];t.indexOf(i) < 0 && t.push(i);
+        }
+      }if ("ready" !== D) throw new Error("apply() is only allowed in ready status");n = n || {};var o,
+          c,
+          l,
+          h,
+          d,
+          p = {},
+          f = [],
+          m = {},
+          w = function w() {};for (var x in v) {
+        if (Object.prototype.hasOwnProperty.call(v, x)) {
+          d = a(x);var P;P = v[x] ? i(d) : { type: "disposed", moduleId: x };var E = !1,
+              O = !1,
+              j = !1,
+              A = "";switch (P.chain && (A = "\nUpdate propagation: " + P.chain.join(" -> ")), P.type) {case "self-declined":
+              n.onDeclined && n.onDeclined(P), n.ignoreDeclined || (E = new Error("Aborted because of self decline: " + P.moduleId + A));break;case "declined":
+              n.onDeclined && n.onDeclined(P), n.ignoreDeclined || (E = new Error("Aborted because of declined dependency: " + P.moduleId + " in " + P.parentId + A));break;case "unaccepted":
+              n.onUnaccepted && n.onUnaccepted(P), n.ignoreUnaccepted || (E = new Error("Aborted because " + d + " is not accepted" + A));break;case "accepted":
+              n.onAccepted && n.onAccepted(P), O = !0;break;case "disposed":
+              n.onDisposed && n.onDisposed(P), j = !0;break;default:
+              throw new Error("Unexception type " + P.type);}if (E) return s("abort"), Promise.reject(E);if (O) {
+            m[d] = v[d], r(f, P.outdatedModules);for (d in P.outdatedDependencies) {
+              Object.prototype.hasOwnProperty.call(P.outdatedDependencies, d) && (p[d] || (p[d] = []), r(p[d], P.outdatedDependencies[d]));
+            }
+          }j && (r(f, [P.moduleId]), m[d] = w);
+        }
+      }var T = [];for (c = 0; c < f.length; c++) {
+        d = f[c], I[d] && I[d].hot._selfAccepted && T.push({ module: d, errorHandler: I[d].hot._selfAccepted });
+      }s("dispose"), Object.keys(H).forEach(function (t) {
+        H[t] === !1 && e(t);
+      });for (var S, k = f.slice(); k.length > 0;) {
+        if (d = k.pop(), h = I[d]) {
+          var C = {},
+              F = h.hot._disposeHandlers;for (l = 0; l < F.length; l++) {
+            (o = F[l])(C);
+          }for (b[d] = C, h.hot.active = !1, delete I[d], l = 0; l < h.children.length; l++) {
+            var M = I[h.children[l]];M && (S = M.parents.indexOf(d), S >= 0 && M.parents.splice(S, 1));
+          }
+        }
+      }var q, X;for (d in p) {
+        if (Object.prototype.hasOwnProperty.call(p, d) && (h = I[d])) for (X = p[d], l = 0; l < X.length; l++) {
+          q = X[l], S = h.children.indexOf(q), S >= 0 && h.children.splice(S, 1);
+        }
+      }s("apply"), g = y;for (d in m) {
+        Object.prototype.hasOwnProperty.call(m, d) && (t[d] = m[d]);
+      }var L = null;for (d in p) {
+        if (Object.prototype.hasOwnProperty.call(p, d)) {
+          h = I[d], X = p[d];var N = [];for (c = 0; c < X.length; c++) {
+            q = X[c], o = h.hot._acceptedDependencies[q], N.indexOf(o) >= 0 || N.push(o);
+          }for (c = 0; c < N.length; c++) {
+            o = N[c];try {
+              o(X);
+            } catch (t) {
+              n.onErrored && n.onErrored({ type: "accept-errored", moduleId: d, dependencyId: X[c], error: t }), n.ignoreErrored || L || (L = t);
+            }
+          }
+        }
+      }for (c = 0; c < T.length; c++) {
+        var R = T[c];d = R.module, _ = [d];try {
+          u(d);
+        } catch (t) {
+          if ("function" == typeof R.errorHandler) try {
+            R.errorHandler(t);
+          } catch (e) {
+            n.onErrored && n.onErrored({ type: "self-accept-error-handler-errored", moduleId: d, error: e, orginalError: t }), n.ignoreErrored || L || (L = e), L || (L = t);
+          } else n.onErrored && n.onErrored({ type: "self-accept-errored", moduleId: d, error: t }), n.ignoreErrored || L || (L = t);
+        }
+      }return L ? (s("fail"), Promise.reject(L)) : (s("idle"), Promise.resolve(f));
+    }function u(e) {
+      if (I[e]) return I[e].exports;var n = I[e] = { i: e, l: !1, exports: {}, hot: o(e), parents: (P = _, _ = [], P), children: [] };return t[e].call(n.exports, n, n.exports, r(e)), n.l = !0, n.exports;
+    }var f = this.webpackHotUpdate;this.webpackHotUpdate = function (t, e) {
+      l(t, e), f && f(t, e);
+    };var m,
+        v,
+        y,
+        w = !0,
+        g = "2d7a3d3794a34ba327f6",
+        b = {},
+        x = !0,
+        _ = [],
+        P = [],
+        E = [],
+        D = "idle",
+        O = 0,
+        j = 0,
+        A = {},
+        T = {},
+        H = {},
+        I = {};return u.m = t, u.c = I, u.i = function (t) {
+      return t;
+    }, u.d = function (t, e, n) {
+      u.o(t, e) || Object.defineProperty(t, e, { configurable: !1, enumerable: !0, get: n });
+    }, u.n = function (t) {
+      var e = t && t.__esModule ? function () {
+        return t.default;
+      } : function () {
+        return t;
+      };return u.d(e, "a", e), e;
+    }, u.o = function (t, e) {
+      return Object.prototype.hasOwnProperty.call(t, e);
+    }, u.p = "/preViewImg/dist", u.h = function () {
+      return g;
+    }, r(7)(u.s = 7);
+  }([function (t, e, n) {
+    "use strict";
+    var i = { getOffCanvas: function getOffCanvas(t, e, n) {
+        var i = document.createElement("canvas"),
+            r = i.getContext("2d");return i.width = e, i.height = n, r.drawImage(t, 0, 0, e, n), i;
+      }, getImg: function getImg(t, e) {
+        var n = document.createElement("img");n.addEventListener("load", function () {
+          e && e(n);
+        }), n.addEventListener("error", function () {}), n.src = t;
+      }, getSize: function getSize(t) {
+        var e = t.getBoundingClientRect();return { height: e.height, width: e.width };
+      }, toFixed: function toFixed(t) {
+        return Math.floor(100 * t) / 100;
+      }, createDom: function createDom() {
+        var t = [].shift.call(arguments) || "div",
+            e = [].shift.call(arguments) || {},
+            n = document.createElement(t);for (var i in e) {
+          n[i] = e[i];
+        }return n;
+      } };t.exports = i;
+  }, function (e, n) {
+    e.exports = t;
+  }, function (t, e, n) {
+    "use strict";
+    var i = "function" == typeof Symbol && "symbol" == _typeof(Symbol.iterator) ? function (t) {
+      return typeof t === "undefined" ? "undefined" : _typeof(t);
+    } : function (t) {
+      return t && "function" == typeof Symbol && t.constructor === Symbol && t !== Symbol.prototype ? "symbol" : typeof t === "undefined" ? "undefined" : _typeof(t);
+    };n(3), n(6);var r = n(0),
+        o = n(5),
+        s = n(1);t.exports = function () {
+      function t(t) {
+        var e = new s(t);e.get("doubletap").set({ posThreshold: 60 }), E.dom = t;for (var n in E) {
+          e.on(n, E[n]);
+        }
+      }function e(e) {
+        var n = r.createDom("ul", { className: "pv-panel" });t(n), n.style.width = e.length * x.width + "px";var i = -m * x.width,
+            o = "translate(" + i + "px)";n.style.transform = o, n.style.webkitTransform = o, e.forEach(function (t) {
+          n.appendChild(a(t));
+        }), d.appendChild(n), y[m]._bindEvent(), y[m].start(), p = n;
+      }function n() {
+        w.innerHTML = m + 1 + "/" + (v + 1);
+      }function a() {
+        var t = [].shift.call(arguments),
+            e = r.createDom("li");e.style.width = document.body.clientWidth + "px", e.style.position = "relative";var n = new o(x, t, e);y.push(n), e.appendChild(n.canvas);var i = document.createElement("img");return i.src = t, i.setAttribute("style", "position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0;"), e.appendChild(i), e;
+      }function c() {
+        if (d.style.display = "block", 0 !== arguments.length) {
+          y = [];var t = [].shift.call(arguments) || [],
+              r = [].slice.call(arguments)[0] || 0,
+              o = [].slice.call(arguments)[1];return l(o && "object" === ("undefined" == typeof o ? "undefined" : i(o)) ? o : g), Array.isArray(t) || (t = [t]), (r < 0 || !Number(r)) && (r = 0), r >= t.length && (r = t.length - 1), m = r, v = t.length - 1, e(t), n(), { srcArr: t, index: r };
+        }
+      }function l(t) {
+        for (var e in t) {
+          b[e] = t[e];
+        }
+      }function h() {
+        d.style.display = "none", p && (d.removeChild(p), p = null), "function" == typeof b.onHide && b.onHide();
+      }var d = null,
+          p = null,
+          u = null,
+          f = null,
+          m = 0,
+          v = 0,
+          y = [],
+          w = {},
+          g = { tapHide: !0 },
+          b = { tapHide: !0 },
+          x = { width: window.innerWidth, height: window.innerHeight };if (!d) {
+        d = r.createDom("div", { id: "pv-stage" });var _ = r.createDom("div", { className: "pv-show-box" }),
+            P = r.createDom("span", { className: "pv-show-page" });_.appendChild(P), d.appendChild(_), w = P, d.style.display = "none", document.body.appendChild(d);
+      }var E = { dom: null, tap: function tap(t) {
+          return clearTimeout(u), u = setTimeout(function () {
+            b.tapHide && h();
+          }, 300), t.srcEvent.preventDefault(), !1;
+        }, doubletap: function doubletap(t) {
+          return clearTimeout(u), t.srcEvent.preventDefault(), !1;
+        }, pan: function pan(t) {
+          clearTimeout(u);var e = t.deltaX;null == f && (f = e);var n = e - f,
+              i = n + -m * x.width;E.dom && (E.dom.style.transition = "none", E.dom.style.webkitTransition = "none", E.dom.style.transform = "translate(" + i + "px)", E.dom.style.webkitTransform = "translate(" + i + "px)");
+        }, panend: function panend(t) {
+          var e = .1 * x.width,
+              i = t.deltaX - f;f = null, E.dom.style.transition = "all 200ms ease", E.dom.style.webkitTransition = "all 200ms ease";var r = m;i < -e && m < v ? m++ : i > e && m > 0 && m--, n();var o = x.width * -m;E.dom.style.transform = "translate(" + o + "px)", E.dom.style.webkitTransform = "translate(" + o + "px)", r !== m && (y[m]._bindEvent(), y[m].start(), y[r].reset());
+        } };return { set: l, show: c, hide: h, panel: d };
+    }();
+  }, function (t, e, n) {
+    "use strict";
+    (function () {
+      for (var t = 0, e = ["webkit", "moz"], n = 0; n < e.length && !window.requestAnimationFrame; ++n) {
+        window.requestAnimationFrame = window[e[n] + "RequestAnimationFrame"], window.cancelAnimationFrame = window[e[n] + "CancelAnimationFrame"] || window[e[n] + "CancelRequestAnimationFrame"];
+      }window.requestAnimationFrame || (window.requestAnimationFrame = function (e, n) {
+        var i = new Date().getTime(),
+            r = Math.max(0, 16 - (i - t)),
+            o = window.setTimeout(function () {
+          e(i + r);
+        }, r);return t = i + r, o;
+      }), window.cancelAnimationFrame || (window.cancelAnimationFrame = function (t) {
+        clearTimeout(t);
+      });
+    })();
+  }, function (t, e, n) {
+    "use strict";
+    function i(t, e, n, i) {
+      if (t.getContext) {
+        var r = 1,
+            o = e.width * r,
+            s = e.height * r;if (o > s) {
+          var a = [s, o];o = a[0], s = a[1];
+        }t.width = o, t.height = s, this.w = o, this.h = s, this.ratio = r, this.canvas = t, this.ctx = t.getContext("2d"), this.offCanvas = null;var c = { maxScale: 4, minScale: 1, doubleTapScale: 2 };this.options = i || c, this.sw = 0, this.sh = 0, this.ox = this.w / 2, this.oy = this.h / 2, this.px = 0, this.py = 0, this.scale = 1, this.timer = null, this.cache = {}, this.src = n, this.init = !1;
+      }
+    }var r = n(0);i.prototype._init = function () {
+      if (!this.init) {
+        this.init = !0;var t = this.src;this._loading("start");var e = this;e._pullImg(t, function (t) {
+          e._loading("end")._getInitData(t)._draw(t);
+        });
+      }
+    }, i.prototype._draw = function (t) {
+      var e = this.ctx;return void 0 != t && (this.offCanvas = r.getOffCanvas(t, 4 * this.sw, 4 * this.sw)), e.clearRect(0, 0, this.w, this.h), e.save(), e.translate(this.ox, this.oy), e.scale(this.scale, this.scale), e.drawImage(this.offCanvas, this.px, this.py, this.sw, this.sh), e.restore(), this;
+    }, i.prototype._getInitData = function (t) {
+      var e = t.width,
+          n = t.height,
+          i = this.w,
+          o = this.h,
+          s = i / e;return s * n <= o ? (this.sw = i, this.sh = r.toFixed(n * s)) : (s = o / n, this.sh = o, this.sw = s * e), this.px = -(this.sw / 2), this.py = -(this.sh / 2), this;
+    }, i.prototype._loading = function (t) {
+      function e() {
+        o.clearRect(0, 0, i, r), o.save(), o.translate(i / 2, r / 2), o.rotate(a / 2 * 5 * s * Math.PI / 180);for (var t = 0; t < 9; t++) {
+          o.save(), o.rotate(36 * t * Math.PI / 180), o.beginPath(), o.arc(30 * a, 30 * a, (1 + t) * a, 0, 2 * Math.PI, !1), o.closePath(), o.fill(), o.stroke(), o.restore();
+        }o.restore(), s++, n.timer = requestAnimationFrame(e);
+      }var n = this,
+          i = n.w,
+          r = n.h,
+          o = n.ctx,
+          s = 0;cancelAnimationFrame(this.timer), o.clearRect(0, 0, i, r), o.fillStyle = "#ffffff", o.strokeStyle = "#ffffff";var a = n.ratio;return "end" !== t && e(), this;
+    }, i.prototype._pullImg = function () {
+      var t = this.cache,
+          e = [].shift.call(arguments) || "",
+          n = [].shift.call(arguments);if (t[e]) n && n(t[e]);else {
+        var i = document.createElement("img");i.addEventListener("load", function () {
+          t[e] = i, n && n(i);
+        }), i.addEventListener("error", function () {}), i.src = e, i.complete && (t[e] = i, n && n(i));
+      }
+    }, i.prototype.animation = function (t) {
+      function e() {
+        if (o <= n) {
+          var a = r + o * i;s.scaling(a), o++, s.timer = requestAnimationFrame(e);
+        } else s.scaling(t), cancelAnimationFrame(s.timer);
+      }cancelAnimationFrame(this.timer);var n = 10,
+          i = (t - this.scale) / n,
+          r = this.scale,
+          o = 1,
+          s = this;e();
+    }, i.prototype.scaling = function (t, e, n) {
+      if (e = this.ratio * e, n = this.ratio * n, null == this.offCanvas) return this;if (null === t) {
+        var i = 0;1 == this.scale ? (this._getBiggerOriginPoint(e, n, this.options.doubleTapScale), i = this.options.doubleTapScale) : (this._getScaleSmallerPoint(), i = 1), this.animation(i);
+      } else t >= 1 && (this.scale = t, this._draw());return this;
+    }, i.prototype.reset = function () {
+      if (1 !== this.scale) {
+        this._getScaleSmallerPoint();this.animation(1);
+      }
+    }, i.prototype.scaled = function (t, e, n) {
+      e = this.ratio * e, n = this.ratio * n;var i = this.scale * t;t < 1 ? this._getScaleSmallerPoint() : this.panchX != e && this.panchY != n && (this.panchX = e, this.panchY = n, this._getBiggerOriginPoint(e, n, i)), i > 4 && (i = 4), this.scaling(i);
+    }, i.prototype._getScaleSmallerPoint = function () {
+      var t = this.scale;if (1 != t) {
+        var e = this.px * this.scale + this.ox,
+            n = this.py * this.scale + this.oy,
+            i = -this.sw / 2 + this.w / 2,
+            r = -this.sh / 2 + this.h / 2;return this.ox = (e - i * t) / (1 - t), this.oy = (n - r * t) / (1 - t), this.px = i - this.ox, this.py = r - this.oy, this;
+      }
+    }, i.prototype._getBiggerOriginPoint = function (t, e, n) {
+      var i = this.px * this.scale + this.ox,
+          r = this.py * this.scale + this.oy,
+          o = i + this.sw,
+          s = r + this.sh;return this.sw * n < this.w ? this.ox = this.w / 2 : t >= i && t <= o ? this.ox = t : t < i ? this.ox = i : t > o && (this.ox = o), this.sh * n < this.h ? this.oy = this.h / 2 : e >= r && e <= s ? this.oy = e : e <= r ? this.oy = r : e >= s && (this.oy = s), this.px = (i - this.ox) / this.scale, this.py = (r - this.oy) / this.scale, this;
+    }, i.prototype.moving = function (t, e) {
+      if (t = this.ratio * t, e = this.ratio * e, null == this.offCanvas) return !1;var n = this.px * this.scale + this.ox + t,
+          i = this.py * this.scale + this.oy + e,
+          r = i + this.sh * this.scale,
+          o = n + this.sw * this.scale,
+          s = this.w - this.sw * this.scale,
+          a = this.h - this.sh * this.scale;return !(n >= 0 && t > 5 || n <= s && t < -5 || this.scale <= 1) && ((i < 0 || r > this.h) && (i <= 0 && i >= a || i < a && e > 0 || i > 0 && e < 0) && (this.oy += e), (n < 0 || o > this.w) && (n <= 0 && n >= s || n < s && t > 0 || n > 0 && t < 0) && (this.ox += t), this._draw(), !0);
+    }, t.exports = i;
+  }, function (t, e, n) {
+    "use strict";
+    function i(t, e, n) {
+      this.canvas = s.createDom("canvas"), this.hammer = new o(n), this.preView = new r(this.canvas, t, e), this.pinchPoint = null, this.scale = 1, this._init();
+    }var r = n(4),
+        o = n(1),
+        s = n(0);i.prototype.reset = function () {
+      this._offEvent(), this.preView.reset();
+    }, i.prototype.start = function () {
+      this.preView._init();
+    }, i.prototype._offEvent = function () {
+      this.hammer.off("doubletap", this._handleDoubleTap.bind(this)).off("pan", this._handlePan.bind(this)).off("panend", this._handlePanEnd.bind(this)).off("pinch", this._handlePinch.bind(this)).off("pinchend", this._handlePinchEnd.bind(this));
+    }, i.prototype._bindEvent = function () {
+      this.hammer.on("doubletap", this._handleDoubleTap.bind(this)).on("pan", this._handlePan.bind(this)).on("panend", this._handlePanEnd.bind(this)).on("pinch", this._handlePinch.bind(this)).on("pinchend", this._handlePinchEnd.bind(this));
+    }, i.prototype._init = function () {
+      var t = this.hammer;t.get("pinch").set({ enable: !0 }), t.get("doubletap").set({ posThreshold: 60 });
+    }, i.prototype._handleDoubleTap = function (t) {
+      var e = t.center;this.preView.scaling(null, e.x, e.y);
+    }, i.prototype._handlePinch = function (t) {
+      var e = t.center;return null === this.pinchPoint && (this.pinchPoint = e), this.preView.scaled(t.scale / this.scale, this.pinchPoint.x, this.pinchPoint.y), this.scale = t.scale, t.srcEvent.preventDefault(), !1;
+    }, i.prototype._handlePinchEnd = function () {
+      this.scale = 1, this.pinchPoint = null;
+    }, i.prototype._handlePan = function (t) {
+      var e = t.center,
+          n = this.panPoint || e,
+          i = { x: e.x - n.x, y: e.y - n.y };if (this.isMoving = this.preView.moving(i.x, i.y), this.isMoving) return this.panPoint = e, t.srcEvent.stopPropagation(), !1;
+    }, i.prototype._handlePanEnd = function (t) {
+      if (this.panPoint = null, this.isMoving) return t.srcEvent.stopPropagation(), !1;
+    }, t.exports = i;
+  }, function (t, e, n) {
+    "use strict";
+    (function () {
+      var t = document.createElement("style");t.innerHTML = "\t#pv-stage {\t\tposition: fixed;\t\tleft: 0;\t\ttop: 0;\t\tz-index: 99999;\t\toverflow: hidden;\t\theight: 100%;\t\twidth: 100%;\t\tbackground: rgb(0, 0, 0);\t}\t.pv-panel {\t\tposition: absolute;\t\tleft: 0;\t\ttop: 0;\t\tmargin: 0;\t\tpadding: 0;\t\tmin-width:100vw;\t\theight: 100%;\t\tlist-style:none;\t\t-webkit-transition:all 200ms ease;\t\t-moz-transition:all 200ms ease;\t\t-ms-transition:all 200ms ease;\t\ttransition: all 200ms ease;\t}\t.pv-panel li{\t\tfloat: left;\t}\t.pv-panel canvas{\t\twidth: 100%;\t}\t.pv-show-box{\t\tposition: absolute;\t\tleft: 0;\t\tbottom: 0;\t\twidth: 100%;\t}\t.pv-show-page{\t\tposition: absolute;\t\tleft: 50%;\t\tbottom: 30px;\t\t-webkit-transform: translateX(-50%);\t\t-moz-transform: translateX(-50%);\t\t-ms-transform: translateX(-50%);\t\t-o-transform: translateX(-50&);\t\ttransform: translateX(-50%);\t\tline-height:1em;\t\tcolor: #7b7b7b;\t}\t", document.getElementsByTagName("head")[0].appendChild(t);
+    })();
+  }, function (t, e, n) {
+    "use strict";
+    var i = n(2);t.exports = i;
+  }]);
+});
+},{"hammerjs":16}],2:[function(require,module,exports) {
 'use strict';
 
-var _preView = require('../src/pre-view');
+var _previewimg = require('../lib/previewimg');
 
-var _preView2 = _interopRequireDefault(_preView);
+var _previewimg2 = _interopRequireDefault(_previewimg);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-_preView2.default.show(['https://si.geilicdn.com/hz_img_11a500000161fe9151770a02685e_750_2297_unadjust.png', 'https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
-},{"../src/pre-view":4}],18:[function(require,module,exports) {
+_previewimg2.default.show(['https://si.geilicdn.com/hz_img_054a000001621d3a20670a026860_750_2297_unadjust.png?w=640&h=640', 'https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
+},{"../lib/previewimg":23}],24:[function(require,module,exports) {
 
 var global = (1, eval)('this');
 var OldModule = module.bundle.Module;
@@ -3739,7 +3194,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '65292' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57742' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
@@ -3840,5 +3295,5 @@ function hmrAccept(bundle, id) {
     return hmrAccept(global.require, id);
   });
 }
-},{}]},{},[18,2])
+},{}]},{},[24,2])
 //# sourceMappingURL=/dist/0d17b35f1c800b7809fceb0380f9df8e.map

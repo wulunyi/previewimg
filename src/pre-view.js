@@ -188,10 +188,15 @@ module.exports = (function () {
 		var src = [].shift.call(arguments);
 		var innerDom = util.createDom('li');
 		innerDom.style.width = document.body.clientWidth + 'px';
-		var preViewWrap = new PreViewPage(_SIZE, src);
+		innerDom.style.position = 'relative';
+		var preViewWrap = new PreViewPage(_SIZE, src, innerDom);
 
 		_preList.push(preViewWrap);
 		innerDom.appendChild(preViewWrap.canvas);
+		var imgDom = document.createElement('img');
+		imgDom.src = src;
+		imgDom.setAttribute('style', 'position: absolute; left: 0; top: 0; width: 100%; height: 100%; opacity: 0;')
+		innerDom.appendChild(imgDom);
 
 		return innerDom;
 	}

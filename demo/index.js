@@ -1,3 +1,3 @@
-import previewimg from '../src/pre-view';
+import previewimg from '../lib/previewimg';
 
-previewimg.show(['https://si.geilicdn.com/hz_img_11a500000161fe9151770a02685e_750_2297_unadjust.png','https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
+previewimg.show(['https://si.geilicdn.com/hz_img_054a000001621d3a20670a026860_750_2297_unadjust.png?w=640&h=640','https://si.geilicdn.com/im208863409-1474170850706-2868960.jpg']);
